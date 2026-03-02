@@ -1,5 +1,5 @@
 (function () {
-  const DEFAULT_AVATAR_URL = "/images/avatar.svg?v=20260302f";
+  const DEFAULT_AVATAR_URL = "data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' rx='28' fill='%231d4e80'/%3E%3Ccircle cx='128' cy='96' r='46' fill='%23c8d8e9'/%3E%3Cpath d='M52 214c10-34 41-57 76-57s66 23 76 57' fill='%23c8d8e9'/%3E%3Crect x='80' y='176' width='96' height='50' rx='14' fill='%23123b61'/%3E%3Ctext x='128' y='211' text-anchor='middle' font-family='Segoe UI, Arial, sans-serif' font-size='34' font-weight='700' fill='%23ffffff'%3ET33%3C/text%3E%3C/svg%3E";
   const SESSION_KEY = "tasy_auth_session_v1";
   const USERS_KEY = "tasy_auth_users_v1";
   const PENDING_KEY = "tasy_auth_pending_v1";
