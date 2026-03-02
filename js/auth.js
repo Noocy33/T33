@@ -236,7 +236,7 @@
     btnLogout.addEventListener("click", () => {
       if (serverDisponivel()) requestSync("POST", "/logout", {});
       limparSessao();
-      window.location.replace("login.html");
+      window.location.replace(`${window.location.origin}/login.html?nocache=1`);
     });
   }
 
