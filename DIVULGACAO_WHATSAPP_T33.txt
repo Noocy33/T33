@@ -1,0 +1,28 @@
+MENSAGEM DE DIVULGACAO - WHATSAPP (ENFERMEIRAS/OS)
+
+Bom dia, equipe! 
+
+Ja esta disponivel o sistema T33 de Dimensionamento de Enfermagem (modelo TASY), com acesso por celular e PC.
+
+Link principal:
+https://equipet33.onrender.com/celular
+
+Usuario operacional:
+TESTET33
+Senha:
+123456
+
+Administrador:
+T33
+Senha:
+123456
+
+Recursos principais:
+- Escala de Tecnico de Enfermagem (8 tecnicos)
+- Controle Diario
+- SCP
+- Graficos e exportacao
+
+A plataforma foi organizada para agilizar supervisao, rastreabilidade por setor e registro diario assistencial.
+
+Em caso de duvida de acesso, me acione que apoio na hora.
