@@ -177,9 +177,13 @@
 
     const usuario = normalizarTexto(sessao?.usuario);
     const perfil = normalizarTexto(sessao?.perfil);
+    const podeVer = usuario === "T33" || usuario === "TESTET33";
     const podeEditar = perfil === "ADMIN" && usuario === "T33";
-    // Foto sempre visivel para usuarios logados (T33 e TESTET33),
-    // upload liberado somente para T33 ADM.
+    // Foto visivel somente para T33 e TESTET33.
+    if (!podeVer) {
+      box.style.display = "none";
+      return;
+    }
     box.style.display = "inline-flex";
     if (botaoFoto) {
       botaoFoto.style.display = podeEditar ? "inline-flex" : "none";

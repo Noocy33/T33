@@ -63,10 +63,13 @@
     if (usuario === "T33" || usuario === "TESTET33") {
       loginAvatar.src = montarSrcAvatar(fotoAdmin);
       loginAvatarNome.textContent = usuario === "T33" ? "Administrador T33" : "Usuario TESTET33";
+      loginAvatar.style.opacity = "1";
       return;
     }
 
+    // Avatar reservado para T33 e TESTET33 no login.
     loginAvatar.src = DEFAULT_AVATAR_URL;
+    loginAvatar.style.opacity = "0.35";
     loginAvatarNome.textContent = `Usuario: ${usuario}`;
   }
 
