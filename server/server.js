@@ -16,7 +16,6 @@ const DEFAULT_USERS = [
   { usuario: "T33", senha: "123456", nome: "T33", perfil: "ADMIN", setores: ["TODOS"], ativo: true },
   { usuario: "TESTET33", senha: "123456", nome: "TESTET33", perfil: "ENFERMEIRA_SETOR", setores: ["TODOS"], ativo: true }
 ];
-const ALLOWED_USERS = new Set(["T33", "TESTET33"]);
 
 const sessions = new Map();
 
@@ -30,16 +29,11 @@ function normalizarSetores(setores) {
   return limpos.length ? limpos : ["TODOS"];
 }
 
-function usuarioPermitido(usuario) {
-  return ALLOWED_USERS.has(normalizarTexto(usuario));
-}
-
 function mergeDefaultUsers(users) {
   const lista = Array.isArray(users) ? users : [];
-  const filtrados = lista.filter((u) => usuarioPermitido(u?.usuario));
-  const existentes = new Set(filtrados.map((u) => normalizarTexto(u?.usuario)));
+  const existentes = new Set(lista.map((u) => normalizarTexto(u?.usuario)));
   const faltantes = DEFAULT_USERS.filter((u) => !existentes.has(normalizarTexto(u.usuario)));
-  return [...filtrados, ...faltantes];
+  return [...lista, ...faltantes];
 }
 
 function garantirArquivos() {
@@ -171,12 +165,7 @@ async function handleApi(req, res, pathname) {
     const usuario = normalizarTexto(body.usuario);
     const senha = String(body.senha || "");
     const users = lerJson(USERS_FILE, DEFAULT_USERS);
-    const found = users.find((u) =>
-      usuarioPermitido(u.usuario) &&
-      normalizarTexto(u.usuario) === usuario &&
-      String(u.senha || "") === senha &&
-      Boolean(u.ativo)
-    );
+    const found = users.find((u) => normalizarTexto(u.usuario) === usuario && String(u.senha || "") === senha && Boolean(u.ativo));
     if (!found) return sendJson(res, 401, { erro: "Usuario ou senha invalidos." });
     const token = crypto.randomUUID();
     const sess = {
@@ -230,9 +219,6 @@ async function handleApi(req, res, pathname) {
     const senha = String(body.senha || "");
     const perfil = normalizarTexto(body.perfil || "CONSULTA");
     const setores = normalizarSetores(body.setores);
-    if (!usuarioPermitido(usuario)) {
-      return sendJson(res, 403, { erro: "Cadastro permitido somente para T33 e TESTET33." });
-    }
     if (!nome || !usuario || !senha) {
       return sendJson(res, 400, { erro: "Preencha nome, usuario e senha." });
     }
@@ -269,9 +255,6 @@ async function handleApi(req, res, pathname) {
     const users = lerJson(USERS_FILE, DEFAULT_USERS);
     const usuario = normalizarTexto(body.usuario);
     if (!usuario) return sendJson(res, 400, { erro: "Usuario obrigatorio." });
-    if (!usuarioPermitido(usuario)) {
-      return sendJson(res, 403, { erro: "Somente usuarios T33 e TESTET33 sao permitidos." });
-    }
     const nome = String(body.nome || "").trim() || usuario;
     const perfil = normalizarTexto(body.perfil || "CONSULTA");
     const senha = String(body.senha || "");
@@ -310,7 +293,7 @@ async function handleApi(req, res, pathname) {
     const usuario = decodeURIComponent(pathname.slice("/api/users/".length));
     const alvo = normalizarTexto(usuario);
     if (!alvo) return sendJson(res, 400, { erro: "Usuario invalido." });
-    if (alvo === "T33" || alvo === "TESTET33") {
+    if (alvo === "T33") {
       return sendJson(res, 400, { erro: "Conta protegida. Remocao bloqueada." });
     }
     if (alvo === normalizarTexto(sess.usuario)) return sendJson(res, 400, { erro: "Nao e permitido remover o proprio usuario logado." });
@@ -384,7 +367,7 @@ function mimeType(filePath) {
 function serveStatic(res, pathname) {
   let safePath = pathname === "/" ? "/login.html" : pathname;
   if (safePath === "/register.html" || safePath === "/register") {
-    safePath = "/login.html";
+    safePath = "/register.html";
   }
   const rota = String(pathname || "").toLowerCase();
   if (rota === "/testet33" || rota === "/testet33/") {
@@ -403,7 +386,7 @@ function serveStatic(res, pathname) {
     safePath = "/login.html";
   }
   if (safePath === "/equipe-t33/register") {
-    safePath = "/login.html";
+    safePath = "/register.html";
   }
   if (safePath === "/equipe-t33/splash") {
     safePath = "/splash.html";
