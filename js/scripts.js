@@ -1,4 +1,5 @@
 (() => {
+  const DEFAULT_AVATAR_URL = "/images/avatar.svg?v=20260302f";
   const STORAGE_KEY = "tasy_dimensionamento_v1";
   const setoresUTI = new Set(["UTI 1", "UTI 2"]);
   const setoresCentroCirurgico = new Set(["CENTRO CIRURGICO"]);
@@ -326,7 +327,7 @@
 
         const reader = new FileReader();
         reader.onload = (e) => {
-          fotoPrevia.src = e.target?.result || "/images/avatar.svg";
+          fotoPrevia.src = e.target?.result || DEFAULT_AVATAR_URL;
           salvarEstado();
         };
         reader.readAsDataURL(arquivo);
@@ -993,7 +994,7 @@
       descanso: tr.querySelector(".campo-descanso")?.value || "1 hora",
       obs: tr.querySelector(".campo-obs")?.value || "",
       confirmado: tr.classList.contains("status-confirmado"),
-      foto: tr.querySelector(".foto-previa")?.src || "/images/avatar.svg",
+      foto: tr.querySelector(".foto-previa")?.src || DEFAULT_AVATAR_URL,
       atribuicoes: Array.from(tr.querySelectorAll(".bloco-atrib input:checked")).map((i) => i.value),
       assistencia: Array.from(tr.querySelectorAll(".bloco-assistencia input:checked")).map((i) => i.value)
     }));
@@ -1089,7 +1090,7 @@
         tr.querySelector(".campo-leitos").value = formatarLeitosEmQuadro(src.leitos || "", largura);
         tr.querySelector(".campo-descanso").value = src.descanso || "1 hora";
         tr.querySelector(".campo-obs").value = src.obs || "";
-        tr.querySelector(".foto-previa").src = src.foto || "/images/avatar.svg";
+        tr.querySelector(".foto-previa").src = src.foto || DEFAULT_AVATAR_URL;
         atualizarConfigLeitosPorSetor(tr, setorAtual);
 
         tr.querySelector(".bloco-assistencia").innerHTML = criarAssistenciaHtml(

@@ -1,4 +1,5 @@
 (function () {
+  const DEFAULT_AVATAR_URL = "/images/avatar.svg?v=20260302f";
   const form = document.getElementById("loginForm");
   const campoUsuario = document.getElementById("loginUsuario");
   const campoSenha = document.getElementById("loginSenha");
@@ -37,7 +38,7 @@
   function montarSrcAvatar(url) {
     const base = String(url || "").trim();
     if (!base) {
-      return "/images/avatar.svg";
+      return DEFAULT_AVATAR_URL;
     }
     if (base.startsWith("data:image/")) {
       return base;
@@ -54,7 +55,7 @@
     }
     const usuario = String(campoUsuario.value || "").trim().toUpperCase();
     if (!usuario) {
-      loginAvatar.src = "/images/avatar.svg";
+      loginAvatar.src = DEFAULT_AVATAR_URL;
       loginAvatarNome.textContent = "Bem-vindo";
       return;
     }
@@ -65,7 +66,7 @@
       return;
     }
 
-    loginAvatar.src = "/images/avatar.svg";
+    loginAvatar.src = DEFAULT_AVATAR_URL;
     loginAvatarNome.textContent = `Usuario: ${usuario}`;
   }
 

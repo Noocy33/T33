@@ -1,4 +1,5 @@
 (function () {
+  const DEFAULT_AVATAR_URL = "/images/avatar.svg?v=20260302f";
   const SESSION_KEY = "tasy_auth_session_v1";
   const USERS_KEY = "tasy_auth_users_v1";
   const PENDING_KEY = "tasy_auth_pending_v1";
@@ -176,7 +177,7 @@
       botaoFoto.style.display = podeEditar ? "inline-flex" : "none";
     }
     input.disabled = !podeEditar;
-    preview.src = localStorage.getItem(ADMIN_PHOTO_KEY) || "/images/avatar.svg";
+    preview.src = localStorage.getItem(ADMIN_PHOTO_KEY) || DEFAULT_AVATAR_URL;
     if (serverDisponivel()) {
       const ret = requestSync("GET", "/admin-photo");
       if (ret.ok && typeof ret.data?.foto === "string" && ret.data.foto) {
@@ -198,7 +199,7 @@
       }
       const reader = new FileReader();
       reader.onload = (e) => {
-        const foto = e.target?.result || "/images/avatar.svg";
+        const foto = e.target?.result || DEFAULT_AVATAR_URL;
         preview.src = foto;
         localStorage.setItem(ADMIN_PHOTO_KEY, String(foto));
         if (serverDisponivel()) {
