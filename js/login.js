@@ -59,9 +59,9 @@
       return;
     }
 
-    if (usuario === "T33") {
+    if (usuario === "T33" || usuario === "TESTET33") {
       loginAvatar.src = montarSrcAvatar(fotoAdmin);
-      loginAvatarNome.textContent = "Administrador T33";
+      loginAvatarNome.textContent = usuario === "T33" ? "Administrador T33" : "Usuario TESTET33";
       return;
     }
 
