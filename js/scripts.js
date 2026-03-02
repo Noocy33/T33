@@ -295,7 +295,6 @@
       const nome = clone.querySelector(".campo-colaborador");
       const setor = clone.querySelector(".campo-setor");
       const assistencia = clone.querySelector(".bloco-assistencia");
-      const fotoInput = clone.querySelector(".foto-input");
       const fotoPrevia = clone.querySelector(".foto-previa");
 
       nome.value = `TECNICO ${i}`;
@@ -308,6 +307,9 @@
       });
       assistencia.innerHTML = criarAssistenciaHtml(assistenciaPorSetor(setor.value));
       atualizarConfigLeitosPorSetor(tr, setor.value);
+      if (fotoPrevia) {
+        fotoPrevia.src = DEFAULT_AVATAR_URL;
+      }
 
       const atualizarPorSetor = () => {
         assistencia.innerHTML = criarAssistenciaHtml(assistenciaPorSetor(setor.value));
@@ -318,20 +320,6 @@
       };
       setor.addEventListener("change", atualizarPorSetor);
       setor.addEventListener("input", atualizarPorSetor);
-
-      fotoInput.addEventListener("change", (event) => {
-        const arquivo = event.target.files && event.target.files[0];
-        if (!arquivo) {
-          return;
-        }
-
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          fotoPrevia.src = e.target?.result || DEFAULT_AVATAR_URL;
-          salvarEstado();
-        };
-        reader.readAsDataURL(arquivo);
-      });
 
       corpoTecnicos.appendChild(clone);
     }
@@ -994,7 +982,7 @@
       descanso: tr.querySelector(".campo-descanso")?.value || "1 hora",
       obs: tr.querySelector(".campo-obs")?.value || "",
       confirmado: tr.classList.contains("status-confirmado"),
-      foto: tr.querySelector(".foto-previa")?.src || DEFAULT_AVATAR_URL,
+      foto: DEFAULT_AVATAR_URL,
       atribuicoes: Array.from(tr.querySelectorAll(".bloco-atrib input:checked")).map((i) => i.value),
       assistencia: Array.from(tr.querySelectorAll(".bloco-assistencia input:checked")).map((i) => i.value)
     }));
@@ -1090,7 +1078,7 @@
         tr.querySelector(".campo-leitos").value = formatarLeitosEmQuadro(src.leitos || "", largura);
         tr.querySelector(".campo-descanso").value = src.descanso || "1 hora";
         tr.querySelector(".campo-obs").value = src.obs || "";
-        tr.querySelector(".foto-previa").src = src.foto || DEFAULT_AVATAR_URL;
+        tr.querySelector(".foto-previa").src = DEFAULT_AVATAR_URL;
         atualizarConfigLeitosPorSetor(tr, setorAtual);
 
         tr.querySelector(".bloco-assistencia").innerHTML = criarAssistenciaHtml(
