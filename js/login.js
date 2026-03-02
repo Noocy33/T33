@@ -5,11 +5,21 @@
   const loginErro = document.getElementById("loginErro");
   const loginAvatar = document.getElementById("loginAvatar");
   const loginAvatarNome = document.getElementById("loginAvatarNome");
-  const linkSistema = document.getElementById("linkSistema");
-  const btnCopiarLink = document.getElementById("btnCopiarLink");
 
   if (!form || !campoUsuario || !campoSenha || !loginErro || !window.TASYAuth) {
     return;
+  }
+
+  function montarSrcAvatar(url) {
+    const base = String(url || "").trim();
+    if (!base) {
+      return "images/avatar.svg";
+    }
+    if (base.startsWith("data:image/")) {
+      return base;
+    }
+    const sep = base.includes("?") ? "&" : "?";
+    return `${base}${sep}v=${Date.now()}`;
   }
 
   function atualizarAvatarLogin() {
@@ -26,8 +36,7 @@
     }
 
     if (usuario === "T33") {
-      const foto = fotoAdmin;
-      loginAvatar.src = foto || "images/avatar.svg";
+      loginAvatar.src = montarSrcAvatar(fotoAdmin);
       loginAvatarNome.textContent = "Administrador T33";
       return;
     }
@@ -51,39 +60,7 @@
     window.location.replace("splash.html");
   });
 
-  const IP_LOCAL_PREFERENCIAL = "192.168.0.75";
-  function montarUrlLogin() {
-    const protocolo = window.location.protocol === "https:" ? "https" : "http";
-    const porta = window.location.port || "8080";
-    const hostAtual = window.location.hostname || "";
-    const hostLocal = hostAtual === "localhost" || hostAtual === "127.0.0.1" || hostAtual === "";
-    const hostFinal = hostLocal ? IP_LOCAL_PREFERENCIAL : hostAtual;
-    return `${protocolo}://${hostFinal}:${porta}/equipe-t33`;
-  }
-
-  const urlLogin = montarUrlLogin();
-  if (linkSistema) {
-    linkSistema.value = urlLogin;
-  }
-  if (btnCopiarLink) {
-    btnCopiarLink.addEventListener("click", async () => {
-      try {
-        if (navigator.clipboard && window.isSecureContext) {
-          await navigator.clipboard.writeText(urlLogin);
-        } else if (linkSistema) {
-          linkSistema.focus();
-          linkSistema.select();
-          document.execCommand("copy");
-        }
-        loginErro.style.color = "#1d8f56";
-        loginErro.textContent = "Link copiado com sucesso.";
-      } catch (_erro) {
-        loginErro.style.color = "#b13c3c";
-        loginErro.textContent = "Nao foi possivel copiar automaticamente.";
-      }
-    });
-  }
-
   campoUsuario.addEventListener("input", atualizarAvatarLogin);
+  window.addEventListener("focus", atualizarAvatarLogin);
   atualizarAvatarLogin();
 })();

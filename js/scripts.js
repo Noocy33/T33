@@ -87,6 +87,9 @@
   const blocoGestaoTabela = document.getElementById("blocoGestaoTabela");
   const blocoPendenciasTabela = document.getElementById("blocoPendenciasTabela");
   const corpoPendencias = document.getElementById("corpoPendencias");
+  const admLinkPublicoWrap = document.getElementById("admLinkPublicoWrap");
+  const admLinkPublico = document.getElementById("admLinkPublico");
+  const btnCopiarLinkAdm = document.getElementById("btnCopiarLinkAdm");
   const itemMenuGestao = document.querySelector('.menu-item[data-modulo="GESTAO DE ACESSO"]');
   const sessaoAtual = window.TASYAuth?.obterSessao?.() || null;
   const toastAcao = document.getElementById("toastAcao");
@@ -107,6 +110,23 @@
     "TABELA CONTROLE DIARIO": "TASY / CONTROLE DIARIO",
     SCP: "TASY / SCP"
   };
+
+  function obterBasePublicaEquipeT33() {
+    try {
+      const { protocol, hostname, port } = window.location;
+      if (!hostname) {
+        return window.location.origin || "";
+      }
+      const hostRender = hostname.toLowerCase().endsWith(".onrender.com");
+      if (hostRender) {
+        return `${protocol}//${hostname}`;
+      }
+      const usarPorta = Boolean(port) && port !== "80" && port !== "443";
+      return `${protocol}//${hostname}${usarPorta ? `:${port}` : ""}`;
+    } catch (_erro) {
+      return window.location.origin || "";
+    }
+  }
 
   function larguraLeitoPorSetor(setor) {
     return String(setor || "").includes("UTI") ? 4 : 3;
@@ -195,7 +215,7 @@
   }
 
   function navegarModulo(modulo) {
-    if (modulo === "GESTAO DE ACESSO" && !window.TASYAuth?.eAdmin?.()) {
+    if (modulo === "GESTAO DE ACESSO" && !window.TASYAuth?.eAdminT33?.()) {
       modulo = "DIMENSIONAMENTO DE ENFERMAGEM";
     }
 
@@ -643,9 +663,37 @@
   }
 
   function iniciarGestaoAcesso() {
-    const admin = window.TASYAuth?.eAdmin?.();
-    if (!admin) {
-      if (msgSemPermissao) msgSemPermissao.style.display = "";
+    const adminT33 = Boolean(window.TASYAuth?.eAdminT33?.());
+
+    if (admLinkPublicoWrap) {
+      admLinkPublicoWrap.style.display = adminT33 ? "" : "none";
+    }
+    if (adminT33 && admLinkPublico) {
+      admLinkPublico.value = `${obterBasePublicaEquipeT33()}/equipe-t33`;
+    }
+    if (adminT33 && btnCopiarLinkAdm && admLinkPublico) {
+      btnCopiarLinkAdm.addEventListener("click", async () => {
+        const link = admLinkPublico.value;
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(link);
+          } else {
+            admLinkPublico.focus();
+            admLinkPublico.select();
+            document.execCommand("copy");
+          }
+          mostrarToastAcao("Link Equipe T33 copiado.");
+        } catch (_erro) {
+          mostrarToastAcao("Nao foi possivel copiar o link.");
+        }
+      });
+    }
+
+    if (!adminT33) {
+      if (msgSemPermissao) {
+        msgSemPermissao.style.display = "";
+        msgSemPermissao.textContent = "Acesso permitido somente para T33 ADM.";
+      }
       if (blocoGestao) blocoGestao.style.display = "none";
       if (blocoGestaoAcoes) blocoGestaoAcoes.style.display = "none";
       if (blocoGestaoTabela) blocoGestaoTabela.style.display = "none";
@@ -693,12 +741,16 @@
 
     if (corpoUsuarios) {
       corpoUsuarios.addEventListener("click", (event) => {
-        const alvo = event.target;
-        if (!(alvo instanceof HTMLElement)) {
+        const alvo = event.target instanceof HTMLElement ? event.target : event.target?.parentElement;
+        if (!alvo) {
+          return;
+        }
+        const btnAcao = alvo.closest("button");
+        if (!btnAcao) {
           return;
         }
 
-        const usuarioEditar = alvo.getAttribute("data-editar");
+        const usuarioEditar = btnAcao.getAttribute("data-editar");
         if (usuarioEditar) {
           const usuarios = window.TASYAuth.listarUsuarios();
           const user = usuarios.find((u) => u.usuario === usuarioEditar);
@@ -712,10 +764,11 @@
           admPerfil.value = user.perfil;
           marcarSetoresCadastro(user.setores);
           admAtivo.checked = Boolean(user.ativo);
+          mostrarToastAcao(`Editando usuario ${user.usuario}.`);
           return;
         }
 
-        const usuarioRemover = alvo.getAttribute("data-remover");
+        const usuarioRemover = btnAcao.getAttribute("data-remover");
         if (usuarioRemover) {
           const confirma = window.confirm(`Remover usuario ${usuarioRemover}?`);
           if (!confirma) {
@@ -734,11 +787,15 @@
 
     if (corpoPendencias) {
       corpoPendencias.addEventListener("click", (event) => {
-        const alvo = event.target;
-        if (!(alvo instanceof HTMLElement)) {
+        const alvo = event.target instanceof HTMLElement ? event.target : event.target?.parentElement;
+        if (!alvo) {
           return;
         }
-        const idAprovar = alvo.getAttribute("data-aprovar");
+        const btnAcao = alvo.closest("button");
+        if (!btnAcao) {
+          return;
+        }
+        const idAprovar = btnAcao.getAttribute("data-aprovar");
         if (idAprovar) {
           const ret = window.TASYAuth.aprovarPendencia(idAprovar);
           if (!ret?.ok) {
@@ -749,7 +806,7 @@
           renderUsuarios();
           return;
         }
-        const idReprovar = alvo.getAttribute("data-reprovar");
+        const idReprovar = btnAcao.getAttribute("data-reprovar");
         if (idReprovar) {
           const ret = window.TASYAuth.reprovarPendencia(idReprovar);
           if (!ret?.ok) {

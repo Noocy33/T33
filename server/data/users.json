@@ -18,5 +18,15 @@
       "TODOS"
     ],
     "ativo": true
+  },
+  {
+    "usuario": "TESTET33",
+    "senha": "123456",
+    "nome": "TESTET33",
+    "perfil": "ENFERMEIRA_SETOR",
+    "setores": [
+      "TODOS"
+    ],
+    "ativo": true
   }
 ]

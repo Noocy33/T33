@@ -7,7 +7,8 @@
   const API_BASE = "/api";
   const DEFAULT_USERS = [
     { usuario: "T33", senha: "123456", nome: "T33", perfil: "ADMIN", setores: ["TODOS"], ativo: true },
-    { usuario: "ENFERMAGEM", senha: "123456", nome: "ENFERMAGEM", perfil: "ENFERMEIRA_SETOR", setores: ["TODOS"], ativo: true }
+    { usuario: "ENFERMAGEM", senha: "123456", nome: "ENFERMAGEM", perfil: "ENFERMEIRA_SETOR", setores: ["TODOS"], ativo: true },
+    { usuario: "TESTET33", senha: "123456", nome: "TESTET33", perfil: "ENFERMEIRA_SETOR", setores: ["TODOS"], ativo: true }
   ];
 
   function normalizarTexto(valor) {
@@ -251,6 +252,9 @@
       const ret = requestSync("GET", "/users");
       return ret.ok && Array.isArray(ret.data?.usuarios) ? ret.data.usuarios : [];
     }
+    if (!eAdminT33()) {
+      return [];
+    }
     return carregarUsuariosLocal().map((u) => ({
       usuario: normalizarTexto(u.usuario),
       nome: String(u.nome || u.usuario),
@@ -268,7 +272,7 @@
 
     const lista = carregarUsuariosLocal();
     const sessao = obterSessao();
-    if (!sessao || normalizarTexto(sessao.perfil) !== "ADMIN") return { ok: false, erro: "Acesso negado." };
+    if (!eAdminT33()) return { ok: false, erro: "Acesso permitido somente para T33 ADM." };
     const usuario = normalizarTexto(payload?.usuario);
     if (!usuario) return { ok: false, erro: "Usuario obrigatorio." };
     const nome = String(payload?.nome || "").trim() || usuario;
@@ -310,7 +314,7 @@
       return ret.ok ? { ok: true } : { ok: false, erro: ret.data?.erro || "Falha ao remover usuario." };
     }
     const sessao = obterSessao();
-    if (!sessao || normalizarTexto(sessao.perfil) !== "ADMIN") return { ok: false, erro: "Acesso negado." };
+    if (!eAdminT33()) return { ok: false, erro: "Acesso permitido somente para T33 ADM." };
     const alvo = normalizarTexto(usuarioAlvo);
     if (!alvo) return { ok: false, erro: "Usuario invalido." };
     if (alvo === "T33") return { ok: false, erro: "Conta T33 protegida. Remocao bloqueada." };
@@ -327,6 +331,9 @@
     if (serverDisponivel()) {
       const ret = requestSync("GET", "/pending");
       return ret.ok && Array.isArray(ret.data?.pendencias) ? ret.data.pendencias : [];
+    }
+    if (!eAdminT33()) {
+      return [];
     }
     return carregarPendenciasLocal();
   }
@@ -358,7 +365,7 @@
       return ret.ok ? { ok: true } : { ok: false, erro: ret.data?.erro || "Falha ao aprovar." };
     }
     const sessao = obterSessao();
-    if (!sessao || normalizarTexto(sessao.perfil) !== "ADMIN") return { ok: false, erro: "Acesso negado." };
+    if (!eAdminT33()) return { ok: false, erro: "Acesso permitido somente para T33 ADM." };
     const pendencias = carregarPendenciasLocal();
     const idx = pendencias.findIndex((p) => p.id === id);
     if (idx < 0) return { ok: false, erro: "Pendencia nao encontrada." };
@@ -383,7 +390,7 @@
       return ret.ok ? { ok: true } : { ok: false, erro: ret.data?.erro || "Falha ao reprovar." };
     }
     const sessao = obterSessao();
-    if (!sessao || normalizarTexto(sessao.perfil) !== "ADMIN") return { ok: false, erro: "Acesso negado." };
+    if (!eAdminT33()) return { ok: false, erro: "Acesso permitido somente para T33 ADM." };
     const pendencias = carregarPendenciasLocal();
     const nova = pendencias.filter((p) => p.id !== id);
     salvarPendenciasLocal(nova);
@@ -392,6 +399,12 @@
 
   function eAdmin() {
     return normalizarTexto(obterSessao()?.perfil) === "ADMIN";
+  }
+
+  function eAdminT33() {
+    const sessao = obterSessao();
+    if (!sessao) return false;
+    return normalizarTexto(sessao.perfil) === "ADMIN" && normalizarTexto(sessao.usuario) === "T33";
   }
 
   function obterFotoAdminExibicao() {
@@ -417,6 +430,7 @@
     aprovarPendencia,
     reprovarPendencia,
     eAdmin,
+    eAdminT33,
     obterFotoAdminExibicao
   };
 

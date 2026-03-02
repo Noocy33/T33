@@ -96,7 +96,14 @@
       const avatar = document.getElementById("splashAvatar");
       if (avatar) {
         const foto = window.TASYAuth?.obterFotoAdminExibicao?.();
-        if (foto) avatar.src = foto;
+        if (foto) {
+          if (String(foto).startsWith("data:image/")) {
+            avatar.src = foto;
+          } else {
+            const sep = String(foto).includes("?") ? "&" : "?";
+            avatar.src = `${foto}${sep}v=${Date.now()}`;
+          }
+        }
       }
       setTimeout(() => {
         window.location.replace("T33.html");

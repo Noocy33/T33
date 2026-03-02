@@ -34,6 +34,10 @@
     grid-column: span 2;
   }
 
+  .adm-link-wrap {
+    grid-template-columns: 1fr;
+  }
+
   .operacao-grid {
     grid-template-columns: repeat(2, minmax(130px, 1fr));
   }
@@ -48,9 +52,14 @@
 }
 
 @media (max-width: 720px) {
+  body {
+    font-size: 14px;
+  }
+
   .tasy-menu .menu-item {
-    padding: 7px 9px;
-    font-size: 12px;
+    padding: 9px 10px;
+    font-size: 14px;
+    font-weight: 700;
   }
 
   h1 {
@@ -79,8 +88,32 @@
   }
 
   .foto-previa {
-    width: 56px;
-    height: 56px;
+    width: 66px;
+    height: 66px;
+  }
+
+  .foto-box {
+    min-width: 86px;
+  }
+
+  .tabela-principal th:nth-child(1),
+  .tabela-principal td:nth-child(1) {
+    min-width: 94px;
+  }
+
+  .login-avatar {
+    width: 108px;
+    height: 108px;
+  }
+
+  .admin-foto-img {
+    width: 42px;
+    height: 42px;
+  }
+
+  .admin-foto-btn {
+    min-height: 26px;
+    font-size: 12px;
   }
 
   th,

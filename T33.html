@@ -84,6 +84,12 @@
 
     <section class="painel" id="secGestaoAcesso">
       <div class="subtitulo">Gestao de Acesso (Administrador)</div>
+      <div id="admLinkPublicoWrap" class="adm-link-wrap" style="display:none;">
+        <label>Link oficial Equipe T33
+          <input type="text" id="admLinkPublico" readonly>
+        </label>
+        <button type="button" id="btnCopiarLinkAdm" class="secundario">Copiar link</button>
+      </div>
       <div id="msgSemPermissao" class="login-erro" style="display:none;">Sem permissao para gerenciar usuarios.</div>
       <div class="gestao-grid" id="blocoGestao">
         <label>Nome
@@ -326,7 +332,7 @@
   <tr>
     <td>
       <div class="foto-box">
-        <img src="images/foto-equipe.jpg" alt="Foto do colaborador" class="foto-previa" onerror="this.src='images/avatar.svg'">
+        <img src="images/avatar.svg" alt="Foto do colaborador" class="foto-previa" onerror="this.src='images/avatar.svg'">
         <label class="btn-foto">
           Trocar
           <input type="file" class="foto-input" accept="image/*">

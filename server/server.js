@@ -14,7 +14,8 @@ const ADMIN_PHOTO_FILE = path.join(DATA_DIR, "admin_photo.json");
 
 const DEFAULT_USERS = [
   { usuario: "T33", senha: "123456", nome: "T33", perfil: "ADMIN", setores: ["TODOS"], ativo: true },
-  { usuario: "ENFERMAGEM", senha: "123456", nome: "ENFERMAGEM", perfil: "ENFERMEIRA_SETOR", setores: ["TODOS"], ativo: true }
+  { usuario: "ENFERMAGEM", senha: "123456", nome: "ENFERMAGEM", perfil: "ENFERMEIRA_SETOR", setores: ["TODOS"], ativo: true },
+  { usuario: "TESTET33", senha: "123456", nome: "TESTET33", perfil: "ENFERMEIRA_SETOR", setores: ["TODOS"], ativo: true }
 ];
 
 const sessions = new Map();
@@ -29,12 +30,25 @@ function normalizarSetores(setores) {
   return limpos.length ? limpos : ["TODOS"];
 }
 
+function mergeDefaultUsers(users) {
+  const lista = Array.isArray(users) ? users : [];
+  const existentes = new Set(lista.map((u) => normalizarTexto(u?.usuario)));
+  const faltantes = DEFAULT_USERS.filter((u) => !existentes.has(normalizarTexto(u.usuario)));
+  return [...lista, ...faltantes];
+}
+
 function garantirArquivos() {
   if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
   if (!fs.existsSync(BACKUP_DIR)) fs.mkdirSync(BACKUP_DIR, { recursive: true });
   if (!fs.existsSync(USERS_FILE)) fs.writeFileSync(USERS_FILE, JSON.stringify(DEFAULT_USERS, null, 2), "utf8");
   if (!fs.existsSync(PENDING_FILE)) fs.writeFileSync(PENDING_FILE, JSON.stringify([], null, 2), "utf8");
   if (!fs.existsSync(ADMIN_PHOTO_FILE)) fs.writeFileSync(ADMIN_PHOTO_FILE, JSON.stringify({ foto: "" }, null, 2), "utf8");
+  // Mantem usuarios padrao essenciais (T33/ENFERMAGEM/TESTET33) mesmo em base antiga.
+  const usuariosAtuais = lerJson(USERS_FILE, DEFAULT_USERS);
+  const usuariosMesclados = mergeDefaultUsers(usuariosAtuais);
+  if (usuariosMesclados.length !== usuariosAtuais.length) {
+    fs.writeFileSync(USERS_FILE, JSON.stringify(usuariosMesclados, null, 2), "utf8");
+  }
 }
 
 function lerJson(file, fallback) {
@@ -108,6 +122,16 @@ function requireAdmin(req, res) {
   const sess = getSession(req);
   if (!sess || sess.perfil !== "ADMIN") {
     sendJson(res, 403, { erro: "Acesso negado." });
+    return null;
+  }
+  return sess;
+}
+
+function requireAdminT33(req, res) {
+  const sess = requireAdmin(req, res);
+  if (!sess) return null;
+  if (normalizarTexto(sess.usuario) !== "T33") {
+    sendJson(res, 403, { erro: "Acesso permitido somente para T33 ADM." });
     return null;
   }
   return sess;
@@ -221,13 +245,13 @@ async function handleApi(req, res, pathname) {
   }
 
   if (req.method === "GET" && pathname === "/api/users") {
-    if (!requireAdmin(req, res)) return;
+    if (!requireAdminT33(req, res)) return;
     const users = lerJson(USERS_FILE, DEFAULT_USERS).map(toPublicUser);
     return sendJson(res, 200, { usuarios: users });
   }
 
   if (req.method === "POST" && pathname === "/api/users") {
-    if (!requireAdmin(req, res)) return;
+    if (!requireAdminT33(req, res)) return;
     const body = await parseBody(req);
     const users = lerJson(USERS_FILE, DEFAULT_USERS);
     const usuario = normalizarTexto(body.usuario);
@@ -265,7 +289,7 @@ async function handleApi(req, res, pathname) {
   }
 
   if (req.method === "DELETE" && pathname.startsWith("/api/users/")) {
-    const sess = requireAdmin(req, res);
+    const sess = requireAdminT33(req, res);
     if (!sess) return;
     const usuario = decodeURIComponent(pathname.slice("/api/users/".length));
     const alvo = normalizarTexto(usuario);
@@ -281,13 +305,13 @@ async function handleApi(req, res, pathname) {
   }
 
   if (req.method === "GET" && pathname === "/api/pending") {
-    if (!requireAdmin(req, res)) return;
+    if (!requireAdminT33(req, res)) return;
     const pendencias = lerJson(PENDING_FILE, []);
     return sendJson(res, 200, { pendencias });
   }
 
   if (req.method === "POST" && pathname.startsWith("/api/pending/") && pathname.endsWith("/approve")) {
-    if (!requireAdmin(req, res)) return;
+    if (!requireAdminT33(req, res)) return;
     const id = pathname.slice("/api/pending/".length, -"/approve".length);
     const pendencias = lerJson(PENDING_FILE, []);
     const idx = pendencias.findIndex((p) => p.id === id);
@@ -312,7 +336,7 @@ async function handleApi(req, res, pathname) {
   }
 
   if (req.method === "POST" && pathname.startsWith("/api/pending/") && pathname.endsWith("/reject")) {
-    if (!requireAdmin(req, res)) return;
+    if (!requireAdminT33(req, res)) return;
     const id = pathname.slice("/api/pending/".length, -"/reject".length);
     const pendencias = lerJson(PENDING_FILE, []);
     const nova = pendencias.filter((p) => p.id !== id);
@@ -341,6 +365,19 @@ function mimeType(filePath) {
 
 function serveStatic(res, pathname) {
   let safePath = pathname === "/" ? "/login.html" : pathname;
+  const rota = String(pathname || "").toLowerCase();
+  if (rota === "/testet33" || rota === "/testet33/") {
+    safePath = "/login.html";
+  }
+  if (rota === "/testet33/login") {
+    safePath = "/login.html";
+  }
+  if (rota === "/testet33/register") {
+    safePath = "/register.html";
+  }
+  if (rota === "/testet33/splash") {
+    safePath = "/splash.html";
+  }
   if (safePath === "/equipe-t33" || safePath === "/equipe-t33/" || safePath === "/equipe-t33/login") {
     safePath = "/login.html";
   }
