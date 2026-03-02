@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TASY - Solicitar Cadastro</title>
+<meta name="theme-color" content="#1d4e80">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/mobile.css">
+</head>
+<body class="login-page">
+  <main class="login-card">
+    <h1>SOLICITAR CADASTRO</h1>
+    <p>O acesso sera liberado apos aprovacao do ADMIN.</p>
+    <form id="registerForm" class="login-form" autocomplete="on">
+      <label>Nome
+        <input type="text" id="cadNome" placeholder="Digite o nome" required>
+      </label>
+      <label>Usuario
+        <input type="text" id="cadUsuario" placeholder="Digite o usuario" required>
+      </label>
+      <label>Senha
+        <input type="password" id="cadSenha" placeholder="Digite a senha" required>
+      </label>
+      <label>Perfil solicitado
+        <select id="cadPerfil">
+          <option value="ENFERMEIRA_SETOR">ENFERMEIRA_SETOR</option>
+          <option value="SUPERVISAO">SUPERVISAO</option>
+          <option value="CONSULTA">CONSULTA</option>
+        </select>
+      </label>
+      <label>Setores autorizados (Ctrl para varios)
+        <select id="cadSetores" multiple size="7">
+          <option value="TODOS">TODOS</option>
+          <option value="CLINICA 1">CLINICA 1</option>
+          <option value="CLINICA 2">CLINICA 2</option>
+          <option value="CLINICA 3">CLINICA 3</option>
+          <option value="CLINICA 4">CLINICA 4</option>
+          <option value="UTI 1">UTI 1</option>
+          <option value="UTI 2">UTI 2</option>
+          <option value="MATERNIDADE">MATERNIDADE</option>
+          <option value="ALOJAMENTO">ALOJAMENTO</option>
+          <option value="PSGO">PSGO</option>
+          <option value="PEDIATRIA">PEDIATRIA</option>
+          <option value="UTI PEDIATRICA">UTI PEDIATRICA</option>
+          <option value="UTI NEONATAL">UTI NEONATAL</option>
+          <option value="H.R">H.R</option>
+          <option value="HEMODIALISE">HEMODIALISE</option>
+          <option value="CME">CME</option>
+          <option value="CENTRO CIRURGICO">CENTRO CIRURGICO</option>
+          <option value="PS.VERDE">PS.VERDE</option>
+          <option value="HIPODERMIA">HIPODERMIA</option>
+          <option value="BOX">BOX</option>
+          <option value="TRAUMA">TRAUMA</option>
+        </select>
+      </label>
+      <button type="submit">Enviar solicitacao</button>
+      <a href="login.html" class="login-link">Voltar para login</a>
+      <div id="cadMsg" class="login-erro" role="alert" aria-live="polite"></div>
+    </form>
+  </main>
+  <script src="js/auth.js"></script>
+  <script src="js/register.js"></script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
+  <rect width="1200" height="680" fill="#dfe5eb"/>
+  <rect x="40" y="30" width="1120" height="56" fill="#1d4e80"/>
+  <text x="80" y="66" font-family="Segoe UI, Arial" font-size="24" fill="#ffffff" font-weight="700">PHILIPS TASY</text>
+  <rect x="40" y="90" width="1120" height="52" fill="#e7eef6" stroke="#b8c7d7"/>
+  <g font-family="Segoe UI, Arial" font-size="16" fill="#1f3f60" font-weight="700">
+    <text x="60" y="122">Dimensionamento</text>
+    <text x="250" y="122">Gestao de Acesso</text>
+    <text x="430" y="122">Grafico Equipe</text>
+    <text x="590" y="122">Escala Tecnicos</text>
+    <text x="760" y="122">Controle Diario</text>
+    <text x="930" y="122">SCP</text>
+  </g>
+  <rect x="40" y="160" width="1120" height="44" fill="#2f628f"/>
+  <text x="58" y="189" font-family="Segoe UI, Arial" font-size="20" fill="#ffffff" font-weight="700">TASY / DIMENSIONAMENTO DE ENFERMAGEM</text>
+  <rect x="40" y="220" width="1120" height="410" fill="#ffffff" stroke="#b8c4d1"/>
+  <text x="70" y="258" font-family="Segoe UI, Arial" font-size="20" fill="#1d4e80" font-weight="700">Tela principal com modulos operacionais</text>
+</svg>

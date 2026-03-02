@@ -1,0 +1,23 @@
+{
+  "name": "TASY Dimensionamento de Enfermagem",
+  "short_name": "TASY T33",
+  "start_url": "login.html",
+  "display": "standalone",
+  "background_color": "#dfe5eb",
+  "theme_color": "#1d4e80",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "images/avatar.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "images/avatar.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

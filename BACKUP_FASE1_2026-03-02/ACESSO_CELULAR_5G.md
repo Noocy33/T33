@@ -3,16 +3,6 @@
 ## Objetivo
 Deixar o sistema acessível por URL pública (`https://...`) para funcionar fora do Wi-Fi local.
 
-## Link oficial (usar sempre para interface igual)
-- Login: `https://equipet33.onrender.com/login.html`
-- Acesso alternativo: `https://equipet33.onrender.com/equipe-t33`
-- Sistema: `https://equipet33.onrender.com/T33.html`
-- Atalho celular: `https://equipet33.onrender.com/celular`
-- Atalho PC: `https://equipet33.onrender.com/pc`
-
-> Para PC e celular com a mesma interface, sempre use os links acima (Render).
-> Evite abrir por `file:///` para nao perder layout, login ou dados de sessao.
-
 ## 1) Subir código no GitHub
 No CMD, dentro do projeto:
 

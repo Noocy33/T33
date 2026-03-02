@@ -366,13 +366,10 @@ function mimeType(filePath) {
 
 function serveStatic(res, pathname) {
   let safePath = pathname === "/" ? "/login.html" : pathname;
-  const rota = String(pathname || "").toLowerCase();
-  if (rota === "/celular" || rota === "/celular/" || rota === "/pc" || rota === "/pc/") {
-    safePath = "/login.html";
-  }
   if (safePath === "/register.html" || safePath === "/register") {
     safePath = "/register.html";
   }
+  const rota = String(pathname || "").toLowerCase();
   if (rota === "/testet33" || rota === "/testet33/") {
     safePath = "/login.html";
   }

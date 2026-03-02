@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1d4e80"/>
+      <stop offset="100%" stop-color="#18456f"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="680" fill="url(#g)"/>
+  <rect x="180" y="80" width="840" height="480" rx="14" fill="#d9e7f4" stroke="#9ab7d3" stroke-width="4"/>
+  <circle cx="600" cy="290" r="120" fill="#e9f2fb" stroke="#8da4bd" stroke-width="6"/>
+  <text x="600" y="305" text-anchor="middle" font-family="Segoe UI, Arial" font-size="56" fill="#1d4e80" font-weight="700">T33</text>
+  <text x="600" y="610" text-anchor="middle" font-family="Segoe UI, Arial" font-size="54" fill="#ffffff" font-weight="800" letter-spacing="2">EQUIPE T33</text>
+</svg>

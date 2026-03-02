@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
+  <rect width="1200" height="680" fill="#eef3f9"/>
+  <rect x="40" y="40" width="1120" height="270" fill="#ffffff" stroke="#b8c4d1"/>
+  <text x="60" y="74" font-family="Segoe UI, Arial" font-size="22" fill="#1d4e80" font-weight="700">Controle Diario</text>
+  <rect x="60" y="90" width="240" height="56" fill="#ffffff" stroke="#adbccd"/>
+  <rect x="320" y="90" width="240" height="56" fill="#ffffff" stroke="#adbccd"/>
+  <rect x="580" y="90" width="240" height="56" fill="#ffffff" stroke="#adbccd"/>
+  <rect x="840" y="90" width="240" height="56" fill="#ffffff" stroke="#adbccd"/>
+  <circle cx="1050" cy="225" r="62" fill="#d9e6f5" stroke="#c6d4e1"/>
+  <text x="1050" y="230" text-anchor="middle" font-family="Segoe UI, Arial" font-size="16" fill="#2b4460" font-weight="700">Grafico</text>
+
+  <rect x="40" y="340" width="1120" height="300" fill="#ffffff" stroke="#b8c4d1"/>
+  <text x="60" y="374" font-family="Segoe UI, Arial" font-size="22" fill="#1d4e80" font-weight="700">SCP</text>
+  <rect x="60" y="392" width="720" height="220" fill="#ffffff" stroke="#c3cfdb"/>
+  <line x1="60" y1="436" x2="780" y2="436" stroke="#c3cfdb"/>
+  <line x1="60" y1="476" x2="780" y2="476" stroke="#c3cfdb"/>
+  <line x1="60" y1="516" x2="780" y2="516" stroke="#c3cfdb"/>
+  <line x1="60" y1="556" x2="780" y2="556" stroke="#c3cfdb"/>
+  <line x1="60" y1="596" x2="780" y2="596" stroke="#c3cfdb"/>
+  <rect x="830" y="408" width="280" height="210" fill="#fbfdff" stroke="#c2cfdd"/>
+  <circle cx="970" cy="510" r="78" fill="#d9e6f5" stroke="#c6d4e1"/>
+  <text x="970" y="516" text-anchor="middle" font-family="Segoe UI, Arial" font-size="15" fill="#2b4460" font-weight="700">SCP Donut</text>
+</svg>
