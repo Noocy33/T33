@@ -112,6 +112,12 @@
     SCP: "TASY / SCP"
   };
 
+  function aplicarAvatarFixoTecnicos() {
+    document.querySelectorAll("#corpoTecnicos .foto-previa").forEach((img) => {
+      img.src = DEFAULT_AVATAR_URL;
+    });
+  }
+
   function obterBasePublicaEquipeT33() {
     try {
       const { protocol, hostname, port } = window.location;
@@ -323,6 +329,7 @@
 
       corpoTecnicos.appendChild(clone);
     }
+    aplicarAvatarFixoTecnicos();
   }
 
   function limparLinhaTecnico(tr) {
@@ -1094,6 +1101,7 @@
 
         setLinhaBloqueio(tr, Boolean(src.confirmado));
       });
+      aplicarAvatarFixoTecnicos();
     } catch (_error) {
       localStorage.removeItem(STORAGE_KEY);
     }
