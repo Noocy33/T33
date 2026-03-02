@@ -326,7 +326,7 @@
 
         const reader = new FileReader();
         reader.onload = (e) => {
-          fotoPrevia.src = e.target?.result || "images/avatar.svg";
+          fotoPrevia.src = e.target?.result || "/images/avatar.svg";
           salvarEstado();
         };
         reader.readAsDataURL(arquivo);
@@ -993,7 +993,7 @@
       descanso: tr.querySelector(".campo-descanso")?.value || "1 hora",
       obs: tr.querySelector(".campo-obs")?.value || "",
       confirmado: tr.classList.contains("status-confirmado"),
-      foto: tr.querySelector(".foto-previa")?.src || "images/avatar.svg",
+      foto: tr.querySelector(".foto-previa")?.src || "/images/avatar.svg",
       atribuicoes: Array.from(tr.querySelectorAll(".bloco-atrib input:checked")).map((i) => i.value),
       assistencia: Array.from(tr.querySelectorAll(".bloco-assistencia input:checked")).map((i) => i.value)
     }));
@@ -1089,7 +1089,7 @@
         tr.querySelector(".campo-leitos").value = formatarLeitosEmQuadro(src.leitos || "", largura);
         tr.querySelector(".campo-descanso").value = src.descanso || "1 hora";
         tr.querySelector(".campo-obs").value = src.obs || "";
-        tr.querySelector(".foto-previa").src = src.foto || "images/avatar.svg";
+        tr.querySelector(".foto-previa").src = src.foto || "/images/avatar.svg";
         atualizarConfigLeitosPorSetor(tr, setorAtual);
 
         tr.querySelector(".bloco-assistencia").innerHTML = criarAssistenciaHtml(

@@ -3,11 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<base href="/">
 <title>TASY - Abertura</title>
 <meta name="theme-color" content="#1d4e80">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="css/styles.css?v=20260302c">
-<link rel="stylesheet" href="css/mobile.css?v=20260302c">
+<link rel="stylesheet" href="css/styles.css?v=20260302d">
+<link rel="stylesheet" href="css/mobile.css?v=20260302d">
 <style>
   * { box-sizing: border-box; }
 
@@ -81,11 +82,11 @@
 <body class="login-page">
   <main class="login-card splash-card">
     <div class="msn-orbita msn-orbita-grande" aria-hidden="true">
-      <img id="splashAvatar" src="images/avatar.svg" alt="" onerror="this.src='images/avatar.svg'">
+      <img id="splashAvatar" src="/images/avatar.svg" alt="" onerror="this.src='/images/avatar.svg'">
     </div>
     <p class="splash-frase">EQUIPE T33</p>
   </main>
-  <script src="js/auth.js?v=20260302c"></script>
+  <script src="js/auth.js?v=20260302d"></script>
   <script>
     (function () {
       const sessao = window.TASYAuth?.obterSessao?.();

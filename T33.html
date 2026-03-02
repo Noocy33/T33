@@ -3,11 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<base href="/">
 <title>TASY - Dimensionamento de Enfermagem</title>
 <meta name="theme-color" content="#1d4e80">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="css/styles.css?v=20260302c">
-<link rel="stylesheet" href="css/mobile.css?v=20260302c">
+<link rel="stylesheet" href="css/styles.css?v=20260302d">
+<link rel="stylesheet" href="css/mobile.css?v=20260302d">
 </head>
 <body>
 <div class="tasy-shell">
@@ -16,7 +17,7 @@
     <div class="hospital">Rede Hospitalar Municipal</div>
     <div class="user user-topbar">
       <div id="adminFotoBox" class="admin-foto-box" style="display:none;">
-        <img id="adminFotoPreview" src="images/avatar.svg" alt="Foto ADM T33" class="admin-foto-img" onerror="this.src='images/avatar.svg'">
+        <img id="adminFotoPreview" src="/images/avatar.svg" alt="Foto ADM T33" class="admin-foto-img" onerror="this.src='/images/avatar.svg'">
         <label class="admin-foto-btn">
           Foto
           <input type="file" id="adminFotoInput" accept="image/*">
@@ -332,7 +333,7 @@
   <tr>
     <td>
       <div class="foto-box">
-        <img src="images/avatar.svg" alt="Foto do colaborador" class="foto-previa" onerror="this.src='images/avatar.svg'">
+        <img src="/images/avatar.svg" alt="Foto do colaborador" class="foto-previa" onerror="this.src='/images/avatar.svg'">
         <label class="btn-foto">
           Trocar
           <input type="file" class="foto-input" accept="image/*">
@@ -390,8 +391,8 @@
   </tr>
 </template>
 
-<script src="js/auth.js?v=20260302c"></script>
-<script src="js/scripts.js?v=20260302c"></script>
+<script src="js/auth.js?v=20260302d"></script>
+<script src="js/scripts.js?v=20260302d"></script>
 <div id="toastAcao" class="toast-acao" aria-live="polite"></div>
 <div id="storyFlorence" class="story-florence" role="note" aria-live="polite"></div>
 </body>

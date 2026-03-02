@@ -174,7 +174,7 @@
     }
 
     box.style.display = "inline-flex";
-    preview.src = localStorage.getItem(ADMIN_PHOTO_KEY) || "images/avatar.svg";
+    preview.src = localStorage.getItem(ADMIN_PHOTO_KEY) || "/images/avatar.svg";
     if (serverDisponivel()) {
       const ret = requestSync("GET", "/admin-photo");
       if (ret.ok && typeof ret.data?.foto === "string" && ret.data.foto) {
@@ -193,7 +193,7 @@
       }
       const reader = new FileReader();
       reader.onload = (e) => {
-        const foto = e.target?.result || "images/avatar.svg";
+        const foto = e.target?.result || "/images/avatar.svg";
         preview.src = foto;
         localStorage.setItem(ADMIN_PHOTO_KEY, String(foto));
         if (serverDisponivel()) {

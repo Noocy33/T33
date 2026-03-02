@@ -37,7 +37,7 @@
   function montarSrcAvatar(url) {
     const base = String(url || "").trim();
     if (!base) {
-      return "images/avatar.svg";
+      return "/images/avatar.svg";
     }
     if (base.startsWith("data:image/")) {
       return base;
@@ -54,7 +54,7 @@
     }
     const usuario = String(campoUsuario.value || "").trim().toUpperCase();
     if (!usuario) {
-      loginAvatar.src = "images/avatar.svg";
+      loginAvatar.src = "/images/avatar.svg";
       loginAvatarNome.textContent = "Bem-vindo";
       return;
     }
@@ -65,7 +65,7 @@
       return;
     }
 
-    loginAvatar.src = "images/avatar.svg";
+    loginAvatar.src = "/images/avatar.svg";
     loginAvatarNome.textContent = `Usuario: ${usuario}`;
   }
 
