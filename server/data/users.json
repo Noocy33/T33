@@ -10,16 +10,6 @@
     "ativo": true
   },
   {
-    "usuario": "ENFERMAGEM",
-    "senha": "123456",
-    "nome": "ENFERMAGEM",
-    "perfil": "ENFERMEIRA_SETOR",
-    "setores": [
-      "TODOS"
-    ],
-    "ativo": true
-  },
-  {
     "usuario": "TESTET33",
     "senha": "123456",
     "nome": "TESTET33",

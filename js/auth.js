@@ -8,9 +8,9 @@
   const API_BASE = "/api";
   const DEFAULT_USERS = [
     { usuario: "T33", senha: "123456", nome: "T33", perfil: "ADMIN", setores: ["TODOS"], ativo: true },
-    { usuario: "ENFERMAGEM", senha: "123456", nome: "ENFERMAGEM", perfil: "ENFERMEIRA_SETOR", setores: ["TODOS"], ativo: true },
     { usuario: "TESTET33", senha: "123456", nome: "TESTET33", perfil: "ENFERMEIRA_SETOR", setores: ["TODOS"], ativo: true }
   ];
+  const ALLOWED_USERS = new Set(["T33", "TESTET33"]);
 
   function normalizarTexto(valor) {
     return String(valor || "").trim().toUpperCase();
@@ -20,6 +20,10 @@
     const lista = Array.isArray(setores) ? setores : [];
     const limpos = Array.from(new Set(lista.map((s) => String(s || "").trim()).filter(Boolean)));
     return limpos.length ? limpos : ["TODOS"];
+  }
+
+  function usuarioPermitido(usuario) {
+    return ALLOWED_USERS.has(normalizarTexto(usuario));
   }
 
   function requestSync(method, path, body) {
@@ -56,7 +60,11 @@
         localStorage.setItem(USERS_KEY, JSON.stringify(DEFAULT_USERS));
         return [...DEFAULT_USERS];
       }
-      return lista;
+      const filtrados = lista.filter((u) => usuarioPermitido(u?.usuario));
+      if (filtrados.length !== lista.length) {
+        salvarUsuariosLocal(filtrados);
+      }
+      return filtrados;
     } catch (_erro) {
       localStorage.setItem(USERS_KEY, JSON.stringify(DEFAULT_USERS));
       return [...DEFAULT_USERS];
@@ -281,6 +289,7 @@
     if (!eAdminT33()) return { ok: false, erro: "Acesso permitido somente para T33 ADM." };
     const usuario = normalizarTexto(payload?.usuario);
     if (!usuario) return { ok: false, erro: "Usuario obrigatorio." };
+    if (!usuarioPermitido(usuario)) return { ok: false, erro: "Somente usuarios T33 e TESTET33 sao permitidos." };
     const nome = String(payload?.nome || "").trim() || usuario;
     const perfil = normalizarTexto(payload?.perfil || "CONSULTA");
     const senha = String(payload?.senha || "");
@@ -323,7 +332,7 @@
     if (!eAdminT33()) return { ok: false, erro: "Acesso permitido somente para T33 ADM." };
     const alvo = normalizarTexto(usuarioAlvo);
     if (!alvo) return { ok: false, erro: "Usuario invalido." };
-    if (alvo === "T33") return { ok: false, erro: "Conta T33 protegida. Remocao bloqueada." };
+    if (alvo === "T33" || alvo === "TESTET33") return { ok: false, erro: "Conta protegida. Remocao bloqueada." };
     if (alvo === normalizarTexto(sessao.usuario)) return { ok: false, erro: "Nao e permitido remover o proprio usuario." };
     const lista = carregarUsuariosLocal();
     const novaLista = lista.filter((u) => normalizarTexto(u.usuario) !== alvo);
@@ -360,6 +369,7 @@
       setores: normalizarSetores(payload?.setores)
     };
     if (!item.nome || !item.usuario || !item.senha) return { ok: false, erro: "Preencha nome, usuario e senha." };
+    if (!usuarioPermitido(item.usuario)) return { ok: false, erro: "Cadastro permitido somente para T33 e TESTET33." };
     pendencias.push(item);
     salvarPendenciasLocal(pendencias);
     return { ok: true };
