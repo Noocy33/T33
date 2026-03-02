@@ -1,0 +1,22 @@
+[
+  {
+    "usuario": "T33",
+    "senha": "123456",
+    "nome": "T33",
+    "perfil": "ADMIN",
+    "setores": [
+      "TODOS"
+    ],
+    "ativo": true
+  },
+  {
+    "usuario": "ENFERMAGEM",
+    "senha": "123456",
+    "nome": "ENFERMAGEM",
+    "perfil": "ENFERMEIRA_SETOR",
+    "setores": [
+      "TODOS"
+    ],
+    "ativo": true
+  }
+]

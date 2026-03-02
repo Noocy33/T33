@@ -1,0 +1,99 @@
+@media (max-width: 980px) {
+  .tasy-topbar {
+    grid-template-columns: 1fr;
+    min-height: 72px;
+    gap: 2px;
+    padding: 8px 10px;
+  }
+
+  .hospital,
+  .user {
+    text-align: left;
+  }
+
+  .user-topbar {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .topo {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .mini-grid {
+    grid-template-columns: repeat(2, minmax(150px, 1fr));
+  }
+
+  .gestao-grid {
+    grid-template-columns: repeat(2, minmax(150px, 1fr));
+  }
+
+  .gestao-setores {
+    grid-column: span 2;
+  }
+
+  .operacao-grid {
+    grid-template-columns: repeat(2, minmax(130px, 1fr));
+  }
+
+  .status-bar {
+    grid-template-columns: repeat(2, minmax(120px, 1fr));
+  }
+
+  .grafico-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .tasy-menu .menu-item {
+    padding: 7px 9px;
+    font-size: 12px;
+  }
+
+  h1 {
+    font-size: 14px;
+  }
+
+  p {
+    font-size: 12px;
+  }
+
+  .mini-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gestao-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gestao-setores {
+    grid-column: span 1;
+  }
+
+  .operacao-grid,
+  .status-bar {
+    grid-template-columns: 1fr;
+  }
+
+  .foto-previa {
+    width: 56px;
+    height: 56px;
+  }
+
+  th,
+  td {
+    padding: 2px;
+  }
+
+  button {
+    min-height: 24px;
+    font-size: 12px;
+  }
+
+  #linkSistema {
+    font-size: 11px;
+  }
+}

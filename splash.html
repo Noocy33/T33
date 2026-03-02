@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TASY - Abertura</title>
+<meta name="theme-color" content="#1d4e80">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="css/styles.css?v=20260302a">
+<link rel="stylesheet" href="css/mobile.css?v=20260302a">
+<style>
+  * { box-sizing: border-box; }
+
+  body.login-page {
+    margin: 0;
+    min-height: 100vh;
+  }
+
+  .splash-card {
+    width: min(100vw, 1200px);
+    max-width: none;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 14px;
+    padding: 28px 20px;
+    background: linear-gradient(180deg, #1d4e80 0%, #18456f 100%);
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    margin: 0 auto;
+  }
+
+  /* Sobrescreve o estilo base do login para manter a foto central na splash */
+  .splash-card .msn-orbita-grande {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    left: auto !important;
+    transform: none !important;
+    width: min(92vw, 800px);
+    aspect-ratio: 4 / 3;
+    height: auto;
+    margin: 0 auto;
+    animation: none;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 3px solid #9ab7d3;
+    background: #d9e7f4;
+  }
+  .splash-card .msn-orbita-grande img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .splash-frase {
+    margin: 0;
+    color: #ffffff;
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 800;
+    letter-spacing: 1.8px;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+    line-height: 1.2;
+  }
+
+  @media (max-width: 720px) {
+    .splash-card {
+      padding: 22px 14px;
+      gap: 12px;
+    }
+  }
+</style>
+</head>
+<body class="login-page">
+  <main class="login-card splash-card">
+    <div class="msn-orbita msn-orbita-grande" aria-hidden="true">
+      <img id="splashAvatar" src="images/avatar.svg" alt="">
+    </div>
+    <p class="splash-frase">EQUIPE T33</p>
+  </main>
+  <script src="js/auth.js"></script>
+  <script>
+    (function () {
+      const sessao = window.TASYAuth?.obterSessao?.();
+      if (!sessao) {
+        window.location.replace("login.html");
+        return;
+      }
+      const avatar = document.getElementById("splashAvatar");
+      if (avatar) {
+        const foto = window.TASYAuth?.obterFotoAdminExibicao?.();
+        if (foto) avatar.src = foto;
+      }
+      setTimeout(() => {
+        window.location.replace("T33.html");
+      }, 5000);
+    })();
+  </script>
+</body>
+</html>

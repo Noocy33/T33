@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TASY - Dimensionamento de Enfermagem</title>
+<meta name="theme-color" content="#1d4e80">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/mobile.css">
+</head>
+<body>
+<div class="tasy-shell">
+  <header class="tasy-topbar">
+    <div class="brand">PHILIPS TASY</div>
+    <div class="hospital">Rede Hospitalar Municipal</div>
+    <div class="user user-topbar">
+      <div id="adminFotoBox" class="admin-foto-box" style="display:none;">
+        <img id="adminFotoPreview" src="images/avatar.svg" alt="Foto ADM T33" class="admin-foto-img">
+        <label class="admin-foto-btn">
+          Foto
+          <input type="file" id="adminFotoInput" accept="image/*">
+        </label>
+      </div>
+      <span id="usuarioLogado">Usuario: T33</span>
+      <button type="button" id="btnLogout" class="btn-logout">Sair</button>
+    </div>
+  </header>
+
+  <nav class="tasy-menu">
+    <button type="button" class="menu-item ativo" data-modulo="DIMENSIONAMENTO DE ENFERMAGEM">Dimensionamento de Enfermagem</button>
+    <button type="button" class="menu-item" data-modulo="GESTAO DE ACESSO">Gestao de Acesso</button>
+    <button type="button" class="menu-item" data-modulo="GRAFICO EQUIPE DE ENFERMAGEM">Grafico Equipe de Enfermagem</button>
+    <button type="button" class="menu-item" data-modulo="TABELA PRINCIPAL">Escala de Tecnico de Enfermagem</button>
+    <button type="button" class="menu-item" data-modulo="TABELA CONTROLE DIARIO">Controle Diario</button>
+    <button type="button" class="menu-item" data-modulo="SCP">SCP</button>
+  </nav>
+
+  <div class="tasy-breadcrumb" id="tasyBreadcrumb">TASY / Dimensionamento de Enfermagem</div>
+
+  <main class="layout">
+    <header class="topo">
+      <div>
+        <h1>DIMENSIONAMENTO DE ENFERMAGEM</h1>
+        <p>Painel operacional no modelo TASY para distribuicao de equipe</p>
+        <p class="setor-supervisao">Setor em supervisao: <strong id="setorSupervisao">TODOS</strong></p>
+      </div>
+      <div class="acoes-gerais">
+        <button type="button" id="btnExportarCsv">Exportar CSV</button>
+        <button type="button" id="btnImprimir">Exportar PDF</button>
+        <button type="button" id="btnReiniciarSistema" class="secundario">Reiniciar</button>
+      </div>
+    </header>
+
+    <section class="painel painel-operacao" id="secIndicadores">
+      <div class="operacao-grid">
+        <label>Filtro por setor
+          <select id="filtroSetor">
+            <option value="TODOS">TODOS</option>
+            <option>CLINICA 1</option>
+            <option>CLINICA 2</option>
+            <option>CLINICA 3</option>
+            <option>CLINICA 4</option>
+            <option>UTI 1</option>
+            <option>UTI 2</option>
+            <option>MATERNIDADE</option>
+            <option>ALOJAMENTO</option>
+            <option>PSGO</option>
+            <option>PEDIATRIA</option>
+            <option>UTI PEDIATRICA</option>
+            <option>UTI NEONATAL</option>
+            <option>H.R</option>
+            <option>HEMODIALISE</option>
+            <option>CME</option>
+            <option>CENTRO CIRURGICO</option>
+            <option>PS.VERDE</option>
+            <option>HIPODERMIA</option>
+            <option>BOX</option>
+            <option>TRAUMA</option>
+          </select>
+        </label>
+      </div>
+    </section>
+
+    <section class="painel" id="secGestaoAcesso">
+      <div class="subtitulo">Gestao de Acesso (Administrador)</div>
+      <div id="msgSemPermissao" class="login-erro" style="display:none;">Sem permissao para gerenciar usuarios.</div>
+      <div class="gestao-grid" id="blocoGestao">
+        <label>Nome
+          <input type="text" id="admNome" placeholder="Nome completo">
+        </label>
+        <label>Usuario
+          <input type="text" id="admUsuario" placeholder="Usuario de login">
+        </label>
+        <label>Senha
+          <input type="password" id="admSenha" placeholder="Senha">
+        </label>
+        <label>Perfil
+          <select id="admPerfil">
+            <option value="ADMIN">ADMIN</option>
+            <option value="ENFERMEIRA_SETOR">ENFERMEIRA_SETOR</option>
+            <option value="SUPERVISAO">SUPERVISAO</option>
+            <option value="CONSULTA">CONSULTA</option>
+          </select>
+        </label>
+        <label class="gestao-setores">Setores autorizados (Ctrl para varios)
+          <select id="admSetores" multiple size="8">
+            <option value="TODOS">TODOS</option>
+            <option value="CLINICA 1">CLINICA 1</option>
+            <option value="CLINICA 2">CLINICA 2</option>
+            <option value="CLINICA 3">CLINICA 3</option>
+            <option value="CLINICA 4">CLINICA 4</option>
+            <option value="UTI 1">UTI 1</option>
+            <option value="UTI 2">UTI 2</option>
+            <option value="MATERNIDADE">MATERNIDADE</option>
+            <option value="ALOJAMENTO">ALOJAMENTO</option>
+            <option value="PSGO">PSGO</option>
+            <option value="PEDIATRIA">PEDIATRIA</option>
+            <option value="UTI PEDIATRICA">UTI PEDIATRICA</option>
+            <option value="UTI NEONATAL">UTI NEONATAL</option>
+            <option value="H.R">H.R</option>
+            <option value="HEMODIALISE">HEMODIALISE</option>
+            <option value="CME">CME</option>
+            <option value="CENTRO CIRURGICO">CENTRO CIRURGICO</option>
+            <option value="PS.VERDE">PS.VERDE</option>
+            <option value="HIPODERMIA">HIPODERMIA</option>
+            <option value="BOX">BOX</option>
+            <option value="TRAUMA">TRAUMA</option>
+          </select>
+        </label>
+        <label class="gestao-ativo">
+          <input type="checkbox" id="admAtivo" checked>
+          Usuario ativo
+        </label>
+      </div>
+      <div class="acoes-gerais" id="blocoGestaoAcoes">
+        <button type="button" id="btnSalvarUsuario">Salvar usuario</button>
+        <button type="button" id="btnNovoUsuario" class="secundario">Limpar formulario</button>
+        <button type="button" id="btnAtualizarPendencias" class="secundario">Atualizar pendencias</button>
+      </div>
+      <div class="subtitulo">Solicitacoes pendentes</div>
+      <div class="tabela-wrap" id="blocoPendenciasTabela">
+        <table class="tabela-principal">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Nome</th>
+              <th>Usuario</th>
+              <th>Perfil</th>
+              <th>Setores</th>
+              <th>Acoes</th>
+            </tr>
+          </thead>
+          <tbody id="corpoPendencias"></tbody>
+        </table>
+      </div>
+      <div class="tabela-wrap" id="blocoGestaoTabela">
+        <table class="tabela-principal">
+          <thead>
+            <tr>
+              <th>Usuario</th>
+              <th>Nome</th>
+              <th>Perfil</th>
+              <th>Setores</th>
+              <th>Ativo</th>
+              <th>Acoes</th>
+            </tr>
+          </thead>
+          <tbody id="corpoUsuarios"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="painel" id="secGraficoEquipe">
+      <div class="subtitulo">Equipe de Enfermagem (Grafico Ativo) <span class="simbolo-enf" aria-hidden="true">+</span></div>
+      <div class="grafico-grid">
+        <div class="grafico-box">
+          <div class="grafico-titulo">Tecnicos por Setor</div>
+          <div id="grafSetores" class="grafico-barras"></div>
+        </div>
+        <div class="grafico-box">
+          <div class="grafico-titulo">Status de Confirmacao</div>
+          <div id="grafStatus" class="grafico-barras"></div>
+        </div>
+        <div class="grafico-box">
+          <div class="grafico-titulo">Status (Formato Redondo)</div>
+          <div class="grafico-redondo-wrap">
+            <div id="grafDonut" class="graf-donut"></div>
+            <div id="grafDonutTexto" class="graf-donut-texto">0%</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="painel" id="secEnfermagem">
+      <div class="subtitulo">Escala de Tecnico de Enfermagem (8 tecnicos) <span class="simbolo-enf" aria-hidden="true">+</span></div>
+      <div class="tabela-wrap">
+        <table class="tabela-principal" id="tabelaPrincipal">
+          <thead>
+            <tr>
+              <th>Foto</th>
+              <th>Matricula</th>
+              <th>Colaborador</th>
+              <th>Setor</th>
+              <th>Leitos</th>
+              <th>Atribuicoes Diarias</th>
+              <th>Assistencia</th>
+              <th>Descanso</th>
+              <th>Confirmar / Reiniciar / Remover</th>
+              <th>Obs. Gerais</th>
+            </tr>
+          </thead>
+          <tbody id="corpoTecnicos"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="painel" id="secControleDiario">
+      <div class="subtitulo">Controle Diario <span class="simbolo-enf" aria-hidden="true">+</span></div>
+      <div class="mini-grid">
+        <label>Altas hospitalar (leitos 3 digitos)
+          <input type="text" id="altasHospitalar" placeholder="">
+        </label>
+        <label>Banhos (leitos 3 digitos)
+          <input type="text" id="banhosTotal" placeholder="">
+        </label>
+        <label>Leitos disponivel
+          <input type="text" id="leitosDisponivel" placeholder="">
+        </label>
+        <label>Distribuicao por tecnico
+          <input type="text" id="distribuicaoBanho" readonly>
+        </label>
+      </div>
+      <div class="mini-grid mini-grid-proced">
+        <label>Laboratorios (leitos 3 digitos)
+          <input type="text" id="leitosLaboratorio" placeholder="">
+        </label>
+        <label>Tomografia (leitos 3 digitos)
+          <input type="text" id="leitosTomografia" placeholder="">
+        </label>
+        <label>C.C (leitos 3 digitos)
+          <input type="text" id="leitosCC" placeholder="">
+        </label>
+      </div>
+      <div class="mini-grid">
+        <label>Funcao extra (espaco em branco)
+          <textarea id="funcaoExtra" rows="2" placeholder="Digite"></textarea>
+        </label>
+      </div>
+      <div class="grafico-box">
+        <div class="grafico-titulo">Grafico Redondo Controle Diario</div>
+        <div class="grafico-redondo-wrap">
+          <div id="grafControleDonut" class="graf-donut"></div>
+          <div id="grafControleTexto" class="graf-donut-texto">0 registros</div>
+        </div>
+        <div id="grafControleLegenda" class="graf-legenda"></div>
+      </div>
+
+    </section>
+
+    <section class="painel" id="secSCPPanel">
+      <div class="subtitulo">SCP <span class="simbolo-enf" aria-hidden="true">+</span></div>
+      <table class="tabela-scp" id="secSCP">
+        <thead>
+          <tr>
+            <th>SCP</th>
+            <th>Pacientes</th>
+            <th>Horas/Unidade (COREN)</th>
+            <th>Tempo da Categoria</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="scp-roxo">
+            <td>Intensivo</td>
+            <td><input type="number" class="scp-qty" data-horas="18" id="scpInt" min="0" step="1" value="0"></td>
+            <td>18 h</td>
+            <td><input type="text" class="scp-total" id="scpIntTotal" readonly></td>
+          </tr>
+          <tr class="scp-vermelho">
+            <td>Semi-intensivo</td>
+            <td><input type="number" class="scp-qty" data-horas="10" id="scpSemi" min="0" step="1" value="0"></td>
+            <td>10 h</td>
+            <td><input type="text" class="scp-total" id="scpSemiTotal" readonly></td>
+          </tr>
+          <tr class="scp-amarelo">
+            <td>Alta dependencia</td>
+            <td><input type="number" class="scp-qty" data-horas="10" id="scpAlta" min="0" step="1" value="0"></td>
+            <td>10 h</td>
+            <td><input type="text" class="scp-total" id="scpAltaTotal" readonly></td>
+          </tr>
+          <tr class="scp-azul">
+            <td>Intermediarios</td>
+            <td><input type="number" class="scp-qty" data-horas="6" id="scpInter" min="0" step="1" value="0"></td>
+            <td>6 h</td>
+            <td><input type="text" class="scp-total" id="scpInterTotal" readonly></td>
+          </tr>
+          <tr class="scp-verde">
+            <td>Minimo</td>
+            <td><input type="number" class="scp-qty" data-horas="4" id="scpMin" min="0" step="1" value="0"></td>
+            <td>4 h</td>
+            <td><input type="text" class="scp-total" id="scpMinTotal" readonly></td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <th colspan="3">Soma total unidade de tempo</th>
+            <th><input type="text" id="somaTotalSCP" readonly></th>
+          </tr>
+        </tfoot>
+      </table>
+      <div class="grafico-box">
+        <div class="grafico-titulo">Grafico Redondo SCP</div>
+        <div class="grafico-redondo-wrap">
+          <div id="grafSCPDonut" class="graf-donut"></div>
+          <div id="grafSCPTexto" class="graf-donut-texto">0 pacientes</div>
+        </div>
+        <div id="grafSCPLegenda" class="graf-legenda"></div>
+      </div>
+    </section>
+
+    <footer class="tasy-footer">TASY Municipal - Modulo de Dimensionamento de Enfermagem</footer>
+  </main>
+</div>
+
+<template id="tplTecnico">
+  <tr>
+    <td>
+      <div class="foto-box">
+        <img src="images/foto-equipe.jpg" alt="Foto do colaborador" class="foto-previa" onerror="this.src='images/avatar.svg'">
+        <label class="btn-foto">
+          Trocar
+          <input type="file" class="foto-input" accept="image/*">
+        </label>
+      </div>
+    </td>
+    <td><input type="text" class="campo-matricula" placeholder="Matricula"></td>
+    <td>
+      <input type="text" class="campo-colaborador" value="TECNICO">
+    </td>
+    <td>
+      <select class="campo-setor">
+        <option>CLINICA 1</option>
+        <option>CLINICA 2</option>
+        <option>CLINICA 3</option>
+        <option>CLINICA 4</option>
+        <option>UTI 1</option>
+        <option>UTI 2</option>
+        <option>MATERNIDADE</option>
+        <option>ALOJAMENTO</option>
+        <option>PSGO</option>
+        <option>PEDIATRIA</option>
+        <option>UTI PEDIATRICA</option>
+        <option>UTI NEONATAL</option>
+        <option>H.R</option>
+        <option>HEMODIALISE</option>
+        <option>CME</option>
+        <option>CENTRO CIRURGICO</option>
+        <option>PS.VERDE</option>
+        <option>HIPODERMIA</option>
+        <option>BOX</option>
+        <option>TRAUMA</option>
+      </select>
+    </td>
+    <td><textarea class="campo-leitos" rows="3" maxlength="37" inputmode="numeric" placeholder="101 102 103&#10;201 202 203&#10;301 302 303"></textarea></td>
+    <td class="bloco-atrib">
+      <label><input type="checkbox" value="POSTO ENFERMAGEM"> POSTO ENFERMAGEM</label>
+      <label><input type="checkbox" value="FARMACIA"> FARMACIA</label>
+      <label><input type="checkbox" value="CME SUJA"> CME SUJA</label>
+      <label><input type="checkbox" value="EXPURGO"> EXPURGO</label>
+      <label><input type="checkbox" value="CME LIMPO"> CME LIMPO</label>
+      <label><input type="checkbox" value="SALA DE EQUIPAMENTOS"> SALA DE EQUIPAMENTOS</label>
+      <label><input type="checkbox" value="RONDA"> RONDA</label>
+      <label><input type="checkbox" value="LABORATORIO"> LABORATORIO</label>
+      <label><input type="checkbox" value="DESCARPACK"> DESCARPACK</label>
+    </td>
+    <td class="bloco-assistencia"></td>
+    <td><input type="text" class="campo-descanso" value="1 hora" placeholder="Digite o descanso"></td>
+    <td class="acoes-linha">
+      <button type="button" class="ok">Confirmar</button>
+      <button type="button" class="reset">Reiniciar</button>
+      <button type="button" class="remove">Remover</button>
+    </td>
+    <td><textarea class="campo-obs" rows="3" placeholder="Observacoes gerais"></textarea></td>
+  </tr>
+</template>
+
+<script src="js/auth.js"></script>
+<script src="js/scripts.js"></script>
+<div id="toastAcao" class="toast-acao" aria-live="polite"></div>
+<div id="storyFlorence" class="story-florence" role="note" aria-live="polite"></div>
+</body>
+</html>
