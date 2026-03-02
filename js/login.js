@@ -10,6 +10,30 @@
     return;
   }
 
+  function removerLinkEquipeNoLogin() {
+    const seletores = [
+      "#admLinkPublicoWrap",
+      "#admLinkPublico",
+      "#btnCopiarLinkAdm",
+      "a[href*='equipe-t33']"
+    ];
+    seletores.forEach((sel) => {
+      document.querySelectorAll(sel).forEach((el) => {
+        const bloco = el.closest("section, div, aside, p, label") || el;
+        bloco.remove();
+      });
+    });
+
+    document.querySelectorAll("body *").forEach((el) => {
+      const txt = (el.textContent || "").trim().toUpperCase();
+      if (!txt) return;
+      if (txt.includes("LINK EQUIPE T33")) {
+        const bloco = el.closest("section, div, aside, p, label") || el;
+        bloco.remove();
+      }
+    });
+  }
+
   function montarSrcAvatar(url) {
     const base = String(url || "").trim();
     if (!base) {
@@ -61,6 +85,7 @@
   });
 
   campoUsuario.addEventListener("input", atualizarAvatarLogin);
+  removerLinkEquipeNoLogin();
   window.addEventListener("focus", atualizarAvatarLogin);
   atualizarAvatarLogin();
 })();

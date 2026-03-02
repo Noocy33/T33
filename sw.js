@@ -1,4 +1,4 @@
-const CACHE_NAME = "tasy-t33-cache-v9";
+const CACHE_NAME = "tasy-t33-cache-v10";
 const ASSETS = [
   "./",
   "index.html",
@@ -20,6 +20,7 @@ self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
   );
+  self.skipWaiting();
 });
 
 self.addEventListener("activate", (event) => {
@@ -32,10 +33,23 @@ self.addEventListener("activate", (event) => {
       )
     )
   );
+  self.clients.claim();
 });
 
 self.addEventListener("fetch", (event) => {
+  const request = event.request;
+  const accept = request.headers.get("accept") || "";
+  const isHtml = request.mode === "navigate" || accept.includes("text/html");
+
+  if (isHtml) {
+    // Evita tela antiga de login por cache: HTML vem da rede primeiro.
+    event.respondWith(
+      fetch(request).catch(() => caches.match(request))
+    );
+    return;
+  }
+
   event.respondWith(
-    caches.match(event.request).then((cached) => cached || fetch(event.request))
+    caches.match(request).then((cached) => cached || fetch(request))
   );
 });
