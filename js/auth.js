@@ -161,19 +161,21 @@
     const box = document.getElementById("adminFotoBox");
     const preview = document.getElementById("adminFotoPreview");
     const input = document.getElementById("adminFotoInput");
+    const botaoFoto = box?.querySelector(".admin-foto-btn");
     if (!box || !preview || !input) {
       return;
     }
 
     const usuario = normalizarTexto(sessao?.usuario);
     const perfil = normalizarTexto(sessao?.perfil);
-    const podeVer = perfil === "ADMIN" && usuario === "T33";
-    if (!podeVer) {
-      box.style.display = "none";
-      return;
-    }
-
+    const podeEditar = perfil === "ADMIN" && usuario === "T33";
+    // Foto sempre visivel para usuarios logados (T33 e TESTET33),
+    // upload liberado somente para T33 ADM.
     box.style.display = "inline-flex";
+    if (botaoFoto) {
+      botaoFoto.style.display = podeEditar ? "inline-flex" : "none";
+    }
+    input.disabled = !podeEditar;
     preview.src = localStorage.getItem(ADMIN_PHOTO_KEY) || "/images/avatar.svg";
     if (serverDisponivel()) {
       const ret = requestSync("GET", "/admin-photo");
@@ -181,6 +183,9 @@
         preview.src = ret.data.foto;
         localStorage.setItem(ADMIN_PHOTO_KEY, ret.data.foto);
       }
+    }
+    if (!podeEditar) {
+      return;
     }
     if (input.dataset.bound === "1") {
       return;
