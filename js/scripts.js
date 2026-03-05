@@ -167,21 +167,14 @@
     return completos;
   }
 
-  // Mantem a digitacao progressiva (1 ate N digitos) sem apagar o que o usuario acabou de digitar.
+  // Mantem digitacao livre (sem limite de tamanho por codigo), removendo apenas caracteres invalidos.
   function formatarCodigosEmDigitacao(valor, limite = null, largura = 3) {
-    const texto = String(valor || "").trim();
-    const porSeparador = texto
-      .split(/[^0-9]+/)
-      .map((t) => t.trim())
-      .filter(Boolean)
-      .map((t) => t.slice(0, largura));
-
-    const grupos = porSeparador.length > 1
-      ? porSeparador
-      : (texto.replace(/\D/g, "").match(new RegExp(`\\d{1,${largura}}`, "g")) || []);
-
-    const lista = typeof limite === "number" ? grupos.slice(0, limite) : grupos;
-    return lista.join(" ");
+    const texto = String(valor || "");
+    const limpo = texto.replace(/[^\d\s\n]/g, "");
+    const lista = limpo
+      .split(/\s+/)
+      .filter(Boolean);
+    return (typeof limite === "number" ? lista.slice(0, limite) : lista).join(" ");
   }
 
   function formatarLeitosEmQuadro(valor, largura = 3) {
@@ -194,13 +187,7 @@
   }
 
   function formatarLeitosEmQuadroDigitacao(valor, largura = 3) {
-    const digitos = String(valor || "").replace(/\D/g, "");
-    const limitados = digitos.match(new RegExp(`\\d{1,${largura}}`, "g")) || [];
-    const linhas = [];
-    for (let i = 0; i < limitados.length; i += 3) {
-      linhas.push(limitados.slice(i, i + 3).join(" "));
-    }
-    return linhas.join("\n");
+    return String(valor || "").replace(/[^\d\s\n]/g, "");
   }
 
   function contarCodigosLivres(valor) {
@@ -252,8 +239,7 @@
   }
 
   function limitarDigitacaoLeitos(valor, largura = 3) {
-    // Normaliza imediatamente para blocos de ate 4 digitos (quantidade ilimitada).
-    return formatarLeitosEmQuadroDigitacao(valor, largura);
+    return String(valor || "").replace(/[^\d\s\n]/g, "");
   }
 
   function aplicarFormatoControleDiario() {
