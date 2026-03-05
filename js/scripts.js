@@ -117,6 +117,28 @@
     SCP: "TASY / SCP"
   };
 
+  function ordenarSecoesConformeMenu() {
+    const layout = document.querySelector(".layout");
+    if (!layout) {
+      return;
+    }
+    const ordem = [
+      paineisModulo["DIMENSIONAMENTO DE ENFERMAGEM"],
+      paineisModulo["TABELA PRINCIPAL"],
+      paineisModulo.SCP,
+      paineisModulo["GRAFICO EQUIPE DE ENFERMAGEM"],
+      paineisModulo["TABELA CONTROLE DIARIO"],
+      paineisModulo["GESTAO DE ACESSO"]
+    ].filter(Boolean);
+    const rodape = layout.querySelector(".tasy-footer");
+    ordem.forEach((secao) => {
+      layout.appendChild(secao);
+    });
+    if (rodape) {
+      layout.appendChild(rodape);
+    }
+  }
+
   function aplicarAvatarFixoTecnicos() {
     document.querySelectorAll("#corpoTecnicos .foto-previa").forEach((img) => {
       img.src = DEFAULT_AVATAR_URL;
@@ -1535,6 +1557,7 @@
     }, { passive: true });
   });
   iniciarGestaoAcesso();
+  ordenarSecoesConformeMenu();
   navegarModulo("DIMENSIONAMENTO DE ENFERMAGEM");
 
   document.getElementById("btnExportarCsv").addEventListener("click", exportarCSV);
