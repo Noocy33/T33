@@ -57,6 +57,7 @@
     if (!usuario) {
       loginAvatar.src = DEFAULT_AVATAR_URL;
       loginAvatarNome.textContent = "Bem-vindo";
+      loginAvatar.style.opacity = "1";
       return;
     }
 
