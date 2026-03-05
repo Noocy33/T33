@@ -374,6 +374,28 @@
     setLinhaBloqueio(tr, false);
   }
 
+  function renumerarTecnicos() {
+    const linhas = Array.from(document.querySelectorAll("#corpoTecnicos tr"));
+    linhas.forEach((tr, idx) => {
+      const campoNome = tr.querySelector(".campo-colaborador");
+      if (!campoNome) {
+        return;
+      }
+      const novoPadrao = `TECNICO ${idx + 1}`;
+      const valorAtual = String(campoNome.value || "").trim();
+      const valorPadraoAntigo = String(campoNome.dataset.defaultValue || "").trim();
+      if (!valorAtual || valorAtual === valorPadraoAntigo) {
+        campoNome.value = novoPadrao;
+      }
+      campoNome.dataset.defaultValue = novoPadrao;
+    });
+  }
+
+  function removerLinhaTecnico(tr) {
+    tr.remove();
+    renumerarTecnicos();
+  }
+
   let toastTimer = null;
   function mostrarToastAcao(mensagem) {
     if (!toastAcao) {
@@ -1244,9 +1266,9 @@
         return;
       }
       if (btn.classList.contains("remove")) {
-        limparLinhaTecnico(tr);
+        removerLinhaTecnico(tr);
         processarAtualizacaoGeral();
-        mostrarToastAcao("Linha removida.");
+        mostrarToastAcao("Tecnico removido.");
       }
     });
   }
