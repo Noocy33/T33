@@ -131,8 +131,32 @@
   }
 
   .login-avatar {
-    width: 108px;
-    height: 108px;
+    width: 132px;
+    height: 132px;
+  }
+
+  .login-card {
+    width: min(96vw, 560px);
+    padding: 20px 16px;
+  }
+
+  .login-card h1 {
+    font-size: 20px;
+  }
+
+  .login-form label {
+    font-size: 15px;
+  }
+
+  .login-form input {
+    min-height: 42px;
+    font-size: 17px;
+    padding: 7px 9px;
+  }
+
+  .login-form button {
+    min-height: 44px;
+    font-size: 17px;
   }
 
   .admin-foto-img {
