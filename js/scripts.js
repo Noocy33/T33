@@ -166,18 +166,18 @@
     return completos;
   }
 
-  // Mantem a digitacao progressiva (1, 2, 3 digitos) sem apagar o que o usuario acabou de digitar.
-  function formatarCodigosEmDigitacao(valor, limite = null) {
+  // Mantem a digitacao progressiva (1 ate N digitos) sem apagar o que o usuario acabou de digitar.
+  function formatarCodigosEmDigitacao(valor, limite = null, largura = 3) {
     const texto = String(valor || "").trim();
     const porSeparador = texto
       .split(/[^0-9]+/)
       .map((t) => t.trim())
       .filter(Boolean)
-      .map((t) => t.slice(0, 3));
+      .map((t) => t.slice(0, largura));
 
     const grupos = porSeparador.length > 1
       ? porSeparador
-      : (texto.replace(/\D/g, "").match(/\d{1,3}/g) || []);
+      : (texto.replace(/\D/g, "").match(new RegExp(`\\d{1,${largura}}`, "g")) || []);
 
     const lista = typeof limite === "number" ? grupos.slice(0, limite) : grupos;
     return lista.join(" ");
@@ -265,6 +265,24 @@
       saida += ch;
     }
     return saida;
+  }
+
+  function aplicarFormatoControleDiario() {
+    const idsLeitos4 = [
+      "altasHospitalar",
+      "banhosTotal",
+      "leitosDisponivel",
+      "leitosLaboratorio",
+      "leitosTomografia",
+      "leitosCC"
+    ];
+    idsLeitos4.forEach((id) => {
+      const campo = document.getElementById(id);
+      if (!campo) {
+        return;
+      }
+      campo.value = formatarCodigosEmDigitacao(campo.value, null, 4);
+    });
   }
 
   function navegarModulo(modulo) {
@@ -1210,6 +1228,7 @@
   }
 
   function processarAtualizacaoGeral() {
+    aplicarFormatoControleDiario();
     calcularSCP();
     distribuirBanhos();
     aplicarFiltros();
@@ -1421,6 +1440,17 @@
   });
 
   document.addEventListener("input", (event) => {
+    if (
+      event.target.id === "altasHospitalar" ||
+      event.target.id === "banhosTotal" ||
+      event.target.id === "leitosDisponivel" ||
+      event.target.id === "leitosLaboratorio" ||
+      event.target.id === "leitosTomografia" ||
+      event.target.id === "leitosCC"
+    ) {
+      event.target.value = formatarCodigosEmDigitacao(event.target.value, null, 4);
+    }
+
     if (event.target.classList.contains("campo-leitos")) {
       const tr = event.target.closest("tr");
       const setor = tr?.querySelector(".campo-setor")?.value || "";
