@@ -140,8 +140,9 @@
     }
   }
 
-  function larguraLeitoPorSetor(setor) {
-    return String(setor || "").includes("UTI") ? 4 : 3;
+  function larguraLeitoPorSetor(_setor) {
+    // Padrao unico solicitado: leitos com ate 4 digitos em todas as opcoes.
+    return 4;
   }
 
   function normalizarCodigosLeito(valor, limite = null, largura = 3) {
@@ -184,7 +185,7 @@
   }
 
   function formatarLeitosEmQuadro(valor, largura = 3) {
-    const grupos = normalizarCodigosLeito(valor, 9, largura);
+    const grupos = normalizarCodigosLeito(valor, null, largura);
     const linhas = [];
     for (let i = 0; i < grupos.length; i += 3) {
       linhas.push(grupos.slice(i, i + 3).join(" "));
@@ -193,8 +194,8 @@
   }
 
   function formatarLeitosEmQuadroDigitacao(valor, largura = 3) {
-    const digitosLimitados = String(valor || "").replace(/\D/g, "").slice(0, largura * 9);
-    const limitados = digitosLimitados.match(new RegExp(`\\d{1,${largura}}`, "g")) || [];
+    const digitos = String(valor || "").replace(/\D/g, "");
+    const limitados = digitos.match(new RegExp(`\\d{1,${largura}}`, "g")) || [];
     const linhas = [];
     for (let i = 0; i < limitados.length; i += 3) {
       linhas.push(limitados.slice(i, i + 3).join(" "));
@@ -253,14 +254,9 @@
   function limitarDigitacaoLeitos(valor, largura = 3) {
     const bruto = String(valor || "").replace(/[^\d\s\n]/g, "");
     let saida = "";
-    let qtdDigitos = 0;
-    const maxDigitos = largura * 9;
     for (const ch of bruto) {
       if (/\d/.test(ch)) {
-        if (qtdDigitos >= maxDigitos) {
-          continue;
-        }
-        qtdDigitos += 1;
+        // Mantem apenas blocos compativeis com largura do leito (ate 4 digitos).
       }
       saida += ch;
     }
@@ -533,13 +529,8 @@
       return;
     }
     const largura = larguraLeitoPorSetor(setor);
-    if (largura === 4) {
-      campoLeitos.placeholder = "1001 1002 1003\n2001 2002 2003\n3001 3002 3003";
-      campoLeitos.maxLength = 44;
-    } else {
-      campoLeitos.placeholder = "101 102 103\n201 202 203\n301 302 303";
-      campoLeitos.maxLength = 35;
-    }
+    campoLeitos.placeholder = "1001 1002 1003\n2001 2002 2003\n3001 3002 3003";
+    campoLeitos.removeAttribute("maxLength");
     campoLeitos.value = formatarLeitosEmQuadroDigitacao(campoLeitos.value, largura);
   }
 
