@@ -473,8 +473,8 @@
       btnOk.title = bloquear ? "Linha confirmada" : "Confirmar linha";
     }
     if (btnRemove) {
-      btnRemove.disabled = bloquear;
-      btnRemove.title = bloquear ? "Desbloqueie para remover" : "Remover conteudo da linha";
+      btnRemove.disabled = false;
+      btnRemove.title = "Remover tecnico";
     }
     if (btnReset) {
       btnReset.disabled = false;
