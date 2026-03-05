@@ -1353,7 +1353,7 @@
   }
 
   montarTecnicos();
-  definirModoEscala(localStorage.getItem(STORAGE_ESCALA_MODO) === "1");
+  definirModoEscala(false);
   restaurarEstado();
   aplicarPermissaoSetores();
   if (!localStorage.getItem(STORAGE_KEY)) {
