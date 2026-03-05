@@ -200,7 +200,7 @@
     </section>
 
     <section class="painel" id="secEnfermagem">
-      <div class="subtitulo">Escala de Tecnico de Enfermagem (ate 10 tecnicos) <span class="simbolo-enf" aria-hidden="true">+</span></div>
+      <div class="subtitulo">Escala de Tecnico de Enfermagem <span class="simbolo-enf" aria-hidden="true">+</span></div>
       <div class="acoes-gerais" style="justify-content:flex-start; margin:8px 0 10px;">
         <button type="button" id="btnAdicionarTecnico" class="secundario">Adicionar tecnico</button>
       </div>
@@ -208,7 +208,6 @@
         <table class="tabela-principal" id="tabelaPrincipal">
           <thead>
             <tr>
-              <th>Foto</th>
               <th>Matricula</th>
               <th>Colaborador</th>
               <th>Setor</th>
@@ -334,11 +333,6 @@
 
 <template id="tplTecnico">
   <tr>
-    <td>
-      <div class="foto-box">
-        <img src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' rx='28' fill='%231d4e80'/%3E%3Ccircle cx='128' cy='96' r='46' fill='%23c8d8e9'/%3E%3Cpath d='M52 214c10-34 41-57 76-57s66 23 76 57' fill='%23c8d8e9'/%3E%3Crect x='80' y='176' width='96' height='50' rx='14' fill='%23123b61'/%3E%3Ctext x='128' y='211' text-anchor='middle' font-family='Segoe UI, Arial, sans-serif' font-size='34' font-weight='700' fill='%23ffffff'%3ET33%3C/text%3E%3C/svg%3E" alt="Foto do colaborador" class="foto-previa">
-      </div>
-    </td>
     <td><input type="text" class="campo-matricula" placeholder="Matricula"></td>
     <td>
       <input type="text" class="campo-colaborador" value="TECNICO">
