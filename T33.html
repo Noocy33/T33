@@ -229,35 +229,49 @@
 
     <section class="painel" id="secControleDiario">
       <div class="subtitulo">Controle Diario <span class="simbolo-enf" aria-hidden="true">+</span></div>
-      <div class="mini-grid">
-        <label>Altas hospitalar (leitos 3 digitos)
-          <input type="text" id="altasHospitalar" placeholder="">
-        </label>
-        <label>Banhos (leitos 3 digitos)
-          <input type="text" id="banhosTotal" placeholder="">
-        </label>
-        <label>Leitos disponivel
-          <input type="text" id="leitosDisponivel" placeholder="">
-        </label>
-        <label>Distribuicao por tecnico
-          <input type="text" id="distribuicaoBanho" readonly>
-        </label>
-      </div>
-      <div class="mini-grid mini-grid-proced">
-        <label>Laboratorios (leitos 3 digitos)
-          <input type="text" id="leitosLaboratorio" placeholder="">
-        </label>
-        <label>Tomografia (leitos 3 digitos)
-          <input type="text" id="leitosTomografia" placeholder="">
-        </label>
-        <label>C.C (leitos 3 digitos)
-          <input type="text" id="leitosCC" placeholder="">
-        </label>
-      </div>
-      <div class="mini-grid">
-        <label>Funcao extra (espaco em branco)
-          <textarea id="funcaoExtra" rows="2" placeholder="Digite"></textarea>
-        </label>
+      <div class="tabela-wrap">
+        <table class="tabela-principal tabela-controle-diario">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Registro</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Altas hospitalar (leitos 3 digitos)</td>
+              <td><input type="text" id="altasHospitalar" placeholder=""></td>
+            </tr>
+            <tr>
+              <td>Banhos (leitos 3 digitos)</td>
+              <td><input type="text" id="banhosTotal" placeholder=""></td>
+            </tr>
+            <tr>
+              <td>Leitos disponivel</td>
+              <td><input type="text" id="leitosDisponivel" placeholder=""></td>
+            </tr>
+            <tr>
+              <td>Distribuicao por tecnico</td>
+              <td><input type="text" id="distribuicaoBanho" readonly></td>
+            </tr>
+            <tr>
+              <td>Laboratorios (leitos 3 digitos)</td>
+              <td><input type="text" id="leitosLaboratorio" placeholder=""></td>
+            </tr>
+            <tr>
+              <td>Tomografia (leitos 3 digitos)</td>
+              <td><input type="text" id="leitosTomografia" placeholder=""></td>
+            </tr>
+            <tr>
+              <td>C.C (leitos 3 digitos)</td>
+              <td><input type="text" id="leitosCC" placeholder=""></td>
+            </tr>
+            <tr>
+              <td>Funcao extra (espaco em branco)</td>
+              <td><textarea id="funcaoExtra" rows="2" placeholder=""></textarea></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
       <div class="grafico-box">
         <div class="grafico-titulo">Grafico Redondo Controle Diario</div>
