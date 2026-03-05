@@ -209,6 +209,47 @@
       .filter(Boolean).length;
   }
 
+  function formatarDuracaoHHMMSS(segundosTotal) {
+    const total = Math.max(Number(segundosTotal) || 0, 0);
+    const h = Math.floor(total / 3600);
+    const m = Math.floor((total % 3600) / 60);
+    const s = Math.floor(total % 60);
+    return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+  }
+
+  function obterConfigCategoriaSCP(categoria) {
+    const chave = String(categoria || "").trim().toUpperCase();
+    const unidadePorCategoria = {
+      INTENSIVO: 8,
+      SEMI: 6,
+      ALTA: 4,
+      INTER: 3,
+      MIN: 2
+    };
+    const unidade = Number(unidadePorCategoria[chave] || 0);
+    const SEGUNDOS_POR_UNIDADE = 825; // 13m45s
+    return {
+      unidade,
+      tempoSegundos: unidade * SEGUNDOS_POR_UNIDADE
+    };
+  }
+
+  function atualizarSomaTecnico(tr) {
+    const categoria = tr.querySelector(".campo-scp-categoria")?.value || "";
+    const pacientes = Number(tr.querySelector(".campo-scp-pacientes")?.value || 0);
+    const campoSoma = tr.querySelector(".campo-scp-soma-tecnico");
+    if (!campoSoma) {
+      return;
+    }
+    const cfg = obterConfigCategoriaSCP(categoria);
+    const soma = Math.max(pacientes, 0) * cfg.tempoSegundos;
+    campoSoma.value = formatarDuracaoHHMMSS(soma);
+  }
+
+  function atualizarSomaTodosTecnicos() {
+    document.querySelectorAll("#corpoTecnicos tr").forEach((tr) => atualizarSomaTecnico(tr));
+  }
+
   function limitarDigitacaoLeitos(valor, largura = 3) {
     const bruto = String(valor || "").replace(/[^\d\s\n]/g, "");
     let saida = "";
@@ -381,6 +422,10 @@
     if (scpPacientes) {
       scpPacientes.value = "0";
     }
+    const somaTecnico = tr.querySelector(".campo-scp-soma-tecnico");
+    if (somaTecnico) {
+      somaTecnico.value = "00:00:00";
+    }
     setLinhaBloqueio(tr, false);
   }
 
@@ -523,7 +568,6 @@
       totais[categoria] += Math.max(pacientes, 0);
     });
 
-    const SEGUNDOS_POR_UNIDADE = 825; // 13m45s por unidade
     const mapa = [
       { id: "scpInt", totalId: "scpIntTotal", somaId: "scpIntSoma", chave: "INTENSIVO", unidade: 8 },
       { id: "scpSemi", totalId: "scpSemiTotal", somaId: "scpSemiSoma", chave: "SEMI", unidade: 6 },
@@ -532,19 +576,13 @@
       { id: "scpMin", totalId: "scpMinTotal", somaId: "scpMinSoma", chave: "MIN", unidade: 2 }
     ];
 
-    const formatarHHMMSS = (segundosTotal) => {
-      const total = Math.max(Number(segundosTotal) || 0, 0);
-      const h = Math.floor(total / 3600);
-      const m = Math.floor((total % 3600) / 60);
-      const s = Math.floor(total % 60);
-      return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
-    };
+    atualizarSomaTodosTecnicos();
 
     let somaSegundos = 0;
     let somaPacientes = 0;
     mapa.forEach((item) => {
       const qtd = Number(totais[item.chave] || 0);
-      const tempoSegundos = item.unidade * SEGUNDOS_POR_UNIDADE;
+      const tempoSegundos = item.unidade * 825;
       const somaCategoria = qtd * tempoSegundos;
       somaSegundos += somaCategoria;
       somaPacientes += qtd;
@@ -555,14 +593,14 @@
         campoQtd.value = String(qtd);
       }
       if (campoTotal) {
-        campoTotal.value = formatarHHMMSS(tempoSegundos);
+        campoTotal.value = formatarDuracaoHHMMSS(tempoSegundos);
       }
       if (campoSoma) {
-        campoSoma.value = formatarHHMMSS(somaCategoria);
+        campoSoma.value = formatarDuracaoHHMMSS(somaCategoria);
       }
     });
 
-    document.getElementById("somaTotalSCP").value = formatarHHMMSS(somaSegundos);
+    document.getElementById("somaTotalSCP").value = formatarDuracaoHHMMSS(somaSegundos);
 
     const statusCargaSCP = document.getElementById("statusCargaSCP");
     if (statusCargaSCP) {
@@ -589,7 +627,7 @@
       }
 
       statusCargaSCP.className = `status-carga ${classe}`;
-      statusCargaSCP.textContent = `Status: ${status} (${formatarHHMMSS(somaSegundos)})`;
+      statusCargaSCP.textContent = `Status: ${status} (${formatarDuracaoHHMMSS(somaSegundos)})`;
     }
 
     if (grafSCPTexto) {
@@ -1242,6 +1280,7 @@
         });
 
         setLinhaBloqueio(tr, Boolean(src.confirmado));
+        atualizarSomaTecnico(tr);
       });
       aplicarAvatarFixoTecnicos();
     } catch (_error) {
