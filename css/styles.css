@@ -543,6 +543,18 @@ textarea {
   overflow-y: auto;
 }
 
+.bloco-fugulin {
+  min-width: 118px;
+  display: grid;
+  gap: 3px;
+}
+
+.bloco-fugulin select,
+.bloco-fugulin input {
+  min-height: 20px;
+  font-size: 10px;
+}
+
 .bloco-atrib label,
 .bloco-assistencia label {
   display: block;
@@ -683,6 +695,66 @@ textarea {
 .tabela-scp tfoot th {
   background: #dbe7f2;
 }
+
+.scp-unidade,
+.scp-total,
+.scp-soma {
+  text-align: center;
+  font-weight: 700;
+}
+
+.scp-soma {
+  color: #b71c1c;
+}
+
+.analise-carga {
+  margin-top: 8px;
+  border: 1px solid #b8c4d1;
+  background: #ffffff;
+  max-width: 460px;
+}
+
+.analise-titulo {
+  padding: 6px 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #183f64;
+  border-bottom: 1px solid #c3cfdb;
+  background: #eef4fa;
+}
+
+.analise-grid {
+  display: grid;
+  grid-template-columns: 190px 1fr;
+}
+
+.analise-grid > div {
+  border-top: 1px solid #d4deea;
+  padding: 5px 8px;
+  font-size: 12px;
+}
+
+.faixa {
+  font-weight: 700;
+}
+
+.faixa-abaixo { background: #4ea1e6; color: #07233f; }
+.faixa-adequada { background: #8bc34a; color: #14330a; }
+.faixa-atencao { background: #f3e55d; color: #3b3600; }
+.faixa-sobrecarga { background: #e53935; color: #ffffff; }
+
+.status-carga {
+  padding: 6px 8px;
+  font-size: 12px;
+  font-weight: 700;
+  border-top: 1px solid #c3cfdb;
+  color: #21384f;
+}
+
+.status-carga.abaixo { background: #d7ebfb; }
+.status-carga.adequada { background: #e6f4d8; }
+.status-carga.atencao { background: #fff7cc; }
+.status-carga.sobrecarga { background: #ffd9d8; color: #7f1d1d; }
 
 .tasy-footer {
   margin-top: 4px;

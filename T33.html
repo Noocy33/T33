@@ -215,6 +215,7 @@
               <th>Leitos</th>
               <th>Atribuicoes Diarias</th>
               <th>Assistencia</th>
+              <th>Fugulin (SCP)</th>
               <th>Descanso</th>
               <th>Confirmar / Reiniciar / Remover</th>
               <th>Obs. Gerais</th>
@@ -269,55 +270,75 @@
     </section>
 
     <section class="painel" id="secSCPPanel">
-      <div class="subtitulo">SCP <span class="simbolo-enf" aria-hidden="true">+</span></div>
+      <div class="subtitulo">SCP (automatico pela Escala de Tecnico) <span class="simbolo-enf" aria-hidden="true">+</span></div>
       <table class="tabela-scp" id="secSCP">
         <thead>
           <tr>
             <th>SCP</th>
             <th>Pacientes</th>
-            <th>Horas/Unidade (COREN)</th>
-            <th>Tempo da Categoria</th>
+            <th>Unidade de Tempo</th>
+            <th>Tempo</th>
+            <th>Soma</th>
           </tr>
         </thead>
         <tbody>
           <tr class="scp-roxo">
             <td>Intensivo</td>
-            <td><input type="number" class="scp-qty" data-horas="18" id="scpInt" min="0" step="1" value="0"></td>
-            <td>18 h</td>
+            <td><input type="number" class="scp-qty" id="scpInt" min="0" step="1" value="0" readonly></td>
+            <td><input type="text" class="scp-unidade" id="scpIntUnidade" value="8" readonly></td>
             <td><input type="text" class="scp-total" id="scpIntTotal" readonly></td>
+            <td><input type="text" class="scp-soma" id="scpIntSoma" readonly></td>
           </tr>
           <tr class="scp-vermelho">
             <td>Semi-intensivo</td>
-            <td><input type="number" class="scp-qty" data-horas="10" id="scpSemi" min="0" step="1" value="0"></td>
-            <td>10 h</td>
+            <td><input type="number" class="scp-qty" id="scpSemi" min="0" step="1" value="0" readonly></td>
+            <td><input type="text" class="scp-unidade" id="scpSemiUnidade" value="6" readonly></td>
             <td><input type="text" class="scp-total" id="scpSemiTotal" readonly></td>
+            <td><input type="text" class="scp-soma" id="scpSemiSoma" readonly></td>
           </tr>
           <tr class="scp-amarelo">
             <td>Alta dependencia</td>
-            <td><input type="number" class="scp-qty" data-horas="10" id="scpAlta" min="0" step="1" value="0"></td>
-            <td>10 h</td>
+            <td><input type="number" class="scp-qty" id="scpAlta" min="0" step="1" value="0" readonly></td>
+            <td><input type="text" class="scp-unidade" id="scpAltaUnidade" value="4" readonly></td>
             <td><input type="text" class="scp-total" id="scpAltaTotal" readonly></td>
+            <td><input type="text" class="scp-soma" id="scpAltaSoma" readonly></td>
           </tr>
           <tr class="scp-azul">
             <td>Intermediarios</td>
-            <td><input type="number" class="scp-qty" data-horas="6" id="scpInter" min="0" step="1" value="0"></td>
-            <td>6 h</td>
+            <td><input type="number" class="scp-qty" id="scpInter" min="0" step="1" value="0" readonly></td>
+            <td><input type="text" class="scp-unidade" id="scpInterUnidade" value="3" readonly></td>
             <td><input type="text" class="scp-total" id="scpInterTotal" readonly></td>
+            <td><input type="text" class="scp-soma" id="scpInterSoma" readonly></td>
           </tr>
           <tr class="scp-verde">
             <td>Minimo</td>
-            <td><input type="number" class="scp-qty" data-horas="4" id="scpMin" min="0" step="1" value="0"></td>
-            <td>4 h</td>
+            <td><input type="number" class="scp-qty" id="scpMin" min="0" step="1" value="0" readonly></td>
+            <td><input type="text" class="scp-unidade" id="scpMinUnidade" value="2" readonly></td>
             <td><input type="text" class="scp-total" id="scpMinTotal" readonly></td>
+            <td><input type="text" class="scp-soma" id="scpMinSoma" readonly></td>
           </tr>
         </tbody>
         <tfoot>
           <tr>
-            <th colspan="3">Soma total unidade de tempo</th>
+            <th colspan="4">Soma total unidade de tempo</th>
             <th><input type="text" id="somaTotalSCP" readonly></th>
           </tr>
         </tfoot>
       </table>
+      <div class="analise-carga">
+        <div class="analise-titulo">Analise da carga de trabalho</div>
+        <div class="analise-grid">
+          <div class="faixa faixa-abaixo">&lt;05:29:00</div>
+          <div>ABAIXO</div>
+          <div class="faixa faixa-adequada">05:30:00 - 06:00:00</div>
+          <div>ADEQUADA</div>
+          <div class="faixa faixa-atencao">06:01:00 - 06:30:00</div>
+          <div>ATENCAO</div>
+          <div class="faixa faixa-sobrecarga">&gt;06:31:00</div>
+          <div>SOBRECARGA</div>
+        </div>
+        <div id="statusCargaSCP" class="status-carga">Status: ABAIXO</div>
+      </div>
       <div class="grafico-box">
         <div class="grafico-titulo">Grafico Redondo SCP</div>
         <div class="grafico-redondo-wrap">
@@ -375,6 +396,17 @@
       <label><input type="checkbox" value="DESCARPACK"> DESCARPACK</label>
     </td>
     <td class="bloco-assistencia"></td>
+    <td class="bloco-fugulin">
+      <select class="campo-scp-categoria">
+        <option value="">Categoria</option>
+        <option value="INTENSIVO">INTENSIVO</option>
+        <option value="SEMI">SEMI-INTENSIVO</option>
+        <option value="ALTA">ALTA DEPENDENCIA</option>
+        <option value="INTER">INTERMEDIARIOS</option>
+        <option value="MIN">MINIMO</option>
+      </select>
+      <input type="number" class="campo-scp-pacientes" min="0" step="1" value="0" placeholder="Pacientes">
+    </td>
     <td><input type="text" class="campo-descanso" value="1 hora" placeholder="Digite o descanso"></td>
     <td class="acoes-linha">
       <button type="button" class="ok">Confirmar</button>

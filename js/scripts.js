@@ -373,6 +373,14 @@
     if (assistencia) {
       assistencia.innerHTML = criarAssistenciaHtml(assistenciaPorSetor(setor));
     }
+    const scpCategoria = tr.querySelector(".campo-scp-categoria");
+    const scpPacientes = tr.querySelector(".campo-scp-pacientes");
+    if (scpCategoria) {
+      scpCategoria.value = "";
+    }
+    if (scpPacientes) {
+      scpPacientes.value = "0";
+    }
     setLinhaBloqueio(tr, false);
   }
 
@@ -498,22 +506,95 @@
   }
 
   function calcularSCP() {
-    const campos = document.querySelectorAll(".scp-qty");
-    let somaHoras = 0;
+    const totais = {
+      INTENSIVO: 0,
+      SEMI: 0,
+      ALTA: 0,
+      INTER: 0,
+      MIN: 0
+    };
+    const linhas = Array.from(document.querySelectorAll("#corpoTecnicos tr"));
+    linhas.forEach((tr) => {
+      const categoria = String(tr.querySelector(".campo-scp-categoria")?.value || "").trim().toUpperCase();
+      const pacientes = Number(tr.querySelector(".campo-scp-pacientes")?.value || 0);
+      if (!categoria || !Object.prototype.hasOwnProperty.call(totais, categoria)) {
+        return;
+      }
+      totais[categoria] += Math.max(pacientes, 0);
+    });
 
-    campos.forEach((campo) => {
-      const qtd = Number(campo.value || 0);
-      const horas = Number(campo.dataset.horas || 0);
-      const total = qtd * horas;
-      somaHoras += total;
+    const SEGUNDOS_POR_UNIDADE = 825; // 13m45s por unidade
+    const mapa = [
+      { id: "scpInt", totalId: "scpIntTotal", somaId: "scpIntSoma", chave: "INTENSIVO", unidade: 8 },
+      { id: "scpSemi", totalId: "scpSemiTotal", somaId: "scpSemiSoma", chave: "SEMI", unidade: 6 },
+      { id: "scpAlta", totalId: "scpAltaTotal", somaId: "scpAltaSoma", chave: "ALTA", unidade: 4 },
+      { id: "scpInter", totalId: "scpInterTotal", somaId: "scpInterSoma", chave: "INTER", unidade: 3 },
+      { id: "scpMin", totalId: "scpMinTotal", somaId: "scpMinSoma", chave: "MIN", unidade: 2 }
+    ];
 
-      const saida = document.getElementById(`${campo.id}Total`);
-      if (saida) {
-        saida.value = `${total.toFixed(1)} h`;
+    const formatarHHMMSS = (segundosTotal) => {
+      const total = Math.max(Number(segundosTotal) || 0, 0);
+      const h = Math.floor(total / 3600);
+      const m = Math.floor((total % 3600) / 60);
+      const s = Math.floor(total % 60);
+      return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+    };
+
+    let somaSegundos = 0;
+    let somaPacientes = 0;
+    mapa.forEach((item) => {
+      const qtd = Number(totais[item.chave] || 0);
+      const tempoSegundos = item.unidade * SEGUNDOS_POR_UNIDADE;
+      const somaCategoria = qtd * tempoSegundos;
+      somaSegundos += somaCategoria;
+      somaPacientes += qtd;
+      const campoQtd = document.getElementById(item.id);
+      const campoTotal = document.getElementById(item.totalId);
+      const campoSoma = document.getElementById(item.somaId);
+      if (campoQtd) {
+        campoQtd.value = String(qtd);
+      }
+      if (campoTotal) {
+        campoTotal.value = formatarHHMMSS(tempoSegundos);
+      }
+      if (campoSoma) {
+        campoSoma.value = formatarHHMMSS(somaCategoria);
       }
     });
 
-    document.getElementById("somaTotalSCP").value = `${somaHoras.toFixed(1)} h`;
+    document.getElementById("somaTotalSCP").value = formatarHHMMSS(somaSegundos);
+
+    const statusCargaSCP = document.getElementById("statusCargaSCP");
+    if (statusCargaSCP) {
+      const faixaAbaixo = 5 * 3600 + 29 * 60;
+      const faixaAdeqIni = 5 * 3600 + 30 * 60;
+      const faixaAdeqFim = 6 * 3600;
+      const faixaAtencaoIni = 6 * 3600 + 60;
+      const faixaAtencaoFim = 6 * 3600 + 30 * 60;
+      let status = "ABAIXO";
+      let classe = "abaixo";
+
+      if (somaSegundos >= faixaAdeqIni && somaSegundos <= faixaAdeqFim) {
+        status = "ADEQUADA";
+        classe = "adequada";
+      } else if (somaSegundos >= faixaAtencaoIni && somaSegundos <= faixaAtencaoFim) {
+        status = "ATENCAO";
+        classe = "atencao";
+      } else if (somaSegundos > faixaAtencaoFim) {
+        status = "SOBRECARGA";
+        classe = "sobrecarga";
+      } else if (somaSegundos > faixaAbaixo) {
+        status = "ATENCAO";
+        classe = "atencao";
+      }
+
+      statusCargaSCP.className = `status-carga ${classe}`;
+      statusCargaSCP.textContent = `Status: ${status} (${formatarHHMMSS(somaSegundos)})`;
+    }
+
+    if (grafSCPTexto) {
+      grafSCPTexto.textContent = `${somaPacientes} pacientes`;
+    }
     atualizarGraficoSCP();
   }
 
@@ -1042,6 +1123,8 @@
       colaborador: tr.querySelector(".campo-colaborador")?.value || "",
       setor: tr.querySelector(".campo-setor")?.value || "",
       leitos: tr.querySelector(".campo-leitos")?.value || "",
+      scpCategoria: tr.querySelector(".campo-scp-categoria")?.value || "",
+      scpPacientes: tr.querySelector(".campo-scp-pacientes")?.value || "0",
       descanso: tr.querySelector(".campo-descanso")?.value || "1 hora",
       obs: tr.querySelector(".campo-obs")?.value || "",
       confirmado: tr.classList.contains("status-confirmado"),
@@ -1120,12 +1203,6 @@
       document.getElementById("leitosCC").value = estado.resumo?.leitosCC || "";
       document.getElementById("funcaoExtra").value = estado.resumo?.funcaoExtra || "";
 
-      document.getElementById("scpInt").value = estado.scp?.scpInt || "0";
-      document.getElementById("scpSemi").value = estado.scp?.scpSemi || "0";
-      document.getElementById("scpAlta").value = estado.scp?.scpAlta || "0";
-      document.getElementById("scpInter").value = estado.scp?.scpInter || "0";
-      document.getElementById("scpMin").value = estado.scp?.scpMin || "0";
-
       const tecnicosSalvos = Array.isArray(estado.tecnicos) ? estado.tecnicos : [];
       const totalDesejado = Math.min(Math.max(tecnicosSalvos.length, TECNICOS_INICIAIS), MAX_TECNICOS);
       let totalAtual = document.querySelectorAll("#corpoTecnicos tr").length;
@@ -1147,9 +1224,10 @@
         const setorAtual = tr.querySelector(".campo-setor").value;
         const largura = larguraLeitoPorSetor(setorAtual);
         tr.querySelector(".campo-leitos").value = formatarLeitosEmQuadro(src.leitos || "", largura);
+        tr.querySelector(".campo-scp-categoria").value = src.scpCategoria || "";
+        tr.querySelector(".campo-scp-pacientes").value = src.scpPacientes || "0";
         tr.querySelector(".campo-descanso").value = src.descanso || "1 hora";
         tr.querySelector(".campo-obs").value = src.obs || "";
-        tr.querySelector(".foto-previa").src = DEFAULT_AVATAR_URL;
         atualizarConfigLeitosPorSetor(tr, setorAtual);
 
         tr.querySelector(".bloco-assistencia").innerHTML = criarAssistenciaHtml(
@@ -1307,6 +1385,7 @@
     if (
       event.target.classList.contains("campo-matricula") ||
       event.target.classList.contains("campo-colaborador") ||
+      event.target.classList.contains("campo-scp-pacientes") ||
       event.target.classList.contains("campo-obs") ||
       event.target.id === "altasHospitalar" ||
       event.target.id === "leitosDisponivel" ||
@@ -1350,6 +1429,10 @@
       return;
     }
     if (event.target.matches(".bloco-atrib input, .bloco-assistencia input")) {
+      salvarEstado();
+    }
+    if (event.target.classList.contains("campo-scp-categoria")) {
+      calcularSCP();
       salvarEstado();
     }
   });
