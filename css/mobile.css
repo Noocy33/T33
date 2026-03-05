@@ -57,9 +57,11 @@
   }
 
   .tasy-menu .menu-item {
-    padding: 9px 10px;
-    font-size: 14px;
+    padding: 8px 9px;
+    font-size: 13px;
     font-weight: 700;
+    line-height: 1.15;
+    min-height: 30px;
   }
 
   h1 {
@@ -151,6 +153,14 @@
   button {
     min-height: 24px;
     font-size: 12px;
+  }
+
+  .tasy-menu {
+    height: auto;
+    min-height: 30px;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
   }
 
   #linkSistema {

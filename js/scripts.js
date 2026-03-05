@@ -298,6 +298,15 @@
       destino.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
+    try {
+      const menuAtivo = document.querySelector(".tasy-menu .menu-item.ativo");
+      if (menuAtivo && typeof menuAtivo.scrollIntoView === "function") {
+        menuAtivo.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+      }
+    } catch (_e) {
+      // Sem impacto funcional.
+    }
+
   }
 
   function criarAssistenciaHtml(lista) {
