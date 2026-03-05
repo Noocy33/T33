@@ -1414,22 +1414,8 @@
   });
 
   document.addEventListener("input", (event) => {
-    if (
-      event.target.id === "altasHospitalar" ||
-      event.target.id === "banhosTotal" ||
-      event.target.id === "leitosDisponivel" ||
-      event.target.id === "leitosLaboratorio" ||
-      event.target.id === "leitosTomografia" ||
-      event.target.id === "leitosCC"
-    ) {
-      event.target.value = limparSomenteDigitosEspacos(event.target.value);
-    }
-
     if (event.target.classList.contains("campo-leitos")) {
-      const tr = event.target.closest("tr");
-      const setor = tr?.querySelector(".campo-setor")?.value || "";
-      const largura = larguraLeitoPorSetor(setor);
-      event.target.value = limitarDigitacaoLeitos(event.target.value, largura);
+      // Mantem digitacao totalmente livre durante o input (inclusive espaco).
       distribuirBanhos();
       salvarEstado();
     }
@@ -1471,12 +1457,22 @@
 
   document.addEventListener("change", (event) => {
     if (event.target.classList.contains("campo-leitos")) {
-      // Ao finalizar, normaliza conforme regra do setor (UTI=4; demais=3).
-      const tr = event.target.closest("tr");
-      const setor = tr?.querySelector(".campo-setor")?.value || "";
-      const largura = larguraLeitoPorSetor(setor);
-      event.target.value = formatarLeitosEmQuadroDigitacao(event.target.value, largura);
+      // Ao finalizar, remove apenas caracteres invalidos (sem bloquear espaco).
+      event.target.value = limparSomenteDigitosEspacos(event.target.value);
       distribuirBanhos();
+      salvarEstado();
+      return;
+    }
+
+    if (
+      event.target.id === "altasHospitalar" ||
+      event.target.id === "banhosTotal" ||
+      event.target.id === "leitosDisponivel" ||
+      event.target.id === "leitosLaboratorio" ||
+      event.target.id === "leitosTomografia" ||
+      event.target.id === "leitosCC"
+    ) {
+      event.target.value = limparSomenteDigitosEspacos(event.target.value);
       salvarEstado();
       return;
     }
