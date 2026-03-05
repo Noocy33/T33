@@ -177,6 +177,10 @@
     return (typeof limite === "number" ? lista.slice(0, limite) : lista).join(" ");
   }
 
+  function limparSomenteDigitosEspacos(valor) {
+    return String(valor || "").replace(/[^\d\s\n]/g, "");
+  }
+
   function formatarLeitosEmQuadro(valor, largura = 3) {
     const grupos = normalizarCodigosLeito(valor, null, largura);
     const linhas = [];
@@ -256,7 +260,7 @@
       if (!campo) {
         return;
       }
-      campo.value = formatarCodigosEmDigitacao(campo.value, null, 4);
+      campo.value = limparSomenteDigitosEspacos(campo.value);
     });
   }
 
@@ -1418,7 +1422,7 @@
       event.target.id === "leitosTomografia" ||
       event.target.id === "leitosCC"
     ) {
-      event.target.value = formatarCodigosEmDigitacao(event.target.value, null, 4);
+      event.target.value = limparSomenteDigitosEspacos(event.target.value);
     }
 
     if (event.target.classList.contains("campo-leitos")) {
