@@ -1,6 +1,8 @@
 (() => {
   const DEFAULT_AVATAR_URL = "data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' rx='28' fill='%231d4e80'/%3E%3Ccircle cx='128' cy='96' r='46' fill='%23c8d8e9'/%3E%3Cpath d='M52 214c10-34 41-57 76-57s66 23 76 57' fill='%23c8d8e9'/%3E%3Crect x='80' y='176' width='96' height='50' rx='14' fill='%23123b61'/%3E%3Ctext x='128' y='211' text-anchor='middle' font-family='Segoe UI, Arial, sans-serif' font-size='34' font-weight='700' fill='%23ffffff'%3ET33%3C/text%3E%3C/svg%3E";
-  const STORAGE_KEY = "tasy_dimensionamento_v1";
+  const STORAGE_KEY = "tasy_dimensionamento_v2";
+  const TECNICOS_INICIAIS = 0;
+  const MAX_TECNICOS = 10;
   const setoresUTI = new Set(["UTI 1", "UTI 2"]);
   const setoresCentroCirurgico = new Set(["CENTRO CIRURGICO"]);
   const setoresMaternidade = new Set(["MATERNIDADE", "ALOJAMENTO", "PSGO"]);
@@ -57,6 +59,7 @@
 
   const corpoTecnicos = document.getElementById("corpoTecnicos");
   const template = document.getElementById("tplTecnico");
+  const btnAdicionarTecnico = document.getElementById("btnAdicionarTecnico");
   const filtroSetor = document.getElementById("filtroSetor");
   const menuItems = document.querySelectorAll(".menu-item");
   const tasyBreadcrumb = document.getElementById("tasyBreadcrumb");
@@ -294,42 +297,58 @@
     return ["SSVV"];
   }
 
-  function montarTecnicos() {
-    for (let i = 1; i <= 8; i += 1) {
-      const clone = template.content.cloneNode(true);
-      const tr = clone.querySelector("tr");
-      const nome = clone.querySelector(".campo-colaborador");
-      const setor = clone.querySelector(".campo-setor");
-      const assistencia = clone.querySelector(".bloco-assistencia");
-      const fotoPrevia = clone.querySelector(".foto-previa");
+  function criarLinhaTecnico(indice) {
+    const clone = template.content.cloneNode(true);
+    const tr = clone.querySelector("tr");
+    const nome = clone.querySelector(".campo-colaborador");
+    const setor = clone.querySelector(".campo-setor");
+    const assistencia = clone.querySelector(".bloco-assistencia");
+    const fotoPrevia = clone.querySelector(".foto-previa");
 
-      nome.value = `TECNICO ${i}`;
-      nome.dataset.defaultValue = nome.value;
-      nome.addEventListener("focus", () => {
-        nome.select();
-      });
-      nome.addEventListener("click", () => {
-        nome.select();
-      });
+    nome.value = `TECNICO ${indice}`;
+    nome.dataset.defaultValue = nome.value;
+    nome.addEventListener("focus", () => {
+      nome.select();
+    });
+    nome.addEventListener("click", () => {
+      nome.select();
+    });
+    assistencia.innerHTML = criarAssistenciaHtml(assistenciaPorSetor(setor.value));
+    atualizarConfigLeitosPorSetor(tr, setor.value);
+    if (fotoPrevia) {
+      fotoPrevia.src = DEFAULT_AVATAR_URL;
+    }
+
+    const atualizarPorSetor = () => {
       assistencia.innerHTML = criarAssistenciaHtml(assistenciaPorSetor(setor.value));
       atualizarConfigLeitosPorSetor(tr, setor.value);
-      if (fotoPrevia) {
-        fotoPrevia.src = DEFAULT_AVATAR_URL;
-      }
+      aplicarFiltros();
+      atualizarStatus();
+      salvarEstado();
+    };
+    setor.addEventListener("change", atualizarPorSetor);
+    setor.addEventListener("input", atualizarPorSetor);
 
-      const atualizarPorSetor = () => {
-        assistencia.innerHTML = criarAssistenciaHtml(assistenciaPorSetor(setor.value));
-        atualizarConfigLeitosPorSetor(tr, setor.value);
-        aplicarFiltros();
-        atualizarStatus();
-        salvarEstado();
-      };
-      setor.addEventListener("change", atualizarPorSetor);
-      setor.addEventListener("input", atualizarPorSetor);
+    corpoTecnicos.appendChild(clone);
+  }
 
-      corpoTecnicos.appendChild(clone);
+  function montarTecnicos() {
+    for (let i = 1; i <= TECNICOS_INICIAIS; i += 1) {
+      criarLinhaTecnico(i);
     }
     aplicarAvatarFixoTecnicos();
+  }
+
+  function adicionarTecnico() {
+    const totalAtual = document.querySelectorAll("#corpoTecnicos tr").length;
+    if (totalAtual >= MAX_TECNICOS) {
+      mostrarToastAcao("Limite maximo de 10 tecnicos atingido.");
+      return;
+    }
+    criarLinhaTecnico(totalAtual + 1);
+    aplicarAvatarFixoTecnicos();
+    processarAtualizacaoGeral();
+    mostrarToastAcao("Tecnico adicionado.");
   }
 
   function limparLinhaTecnico(tr) {
@@ -529,7 +548,7 @@
     const linhas = Array.from(document.querySelectorAll("#corpoTecnicos tr"));
     const setorFiltro = filtroSetor?.value || "TODOS";
 
-    // Mantem sempre os 8 tecnicos visiveis para supervisao.
+    // Mantem sempre os tecnicos visiveis para supervisao.
     linhas.forEach((tr) => {
       tr.style.display = "";
     });
@@ -865,7 +884,7 @@
     const porSetor = Array.from(mapaSetor.entries())
       .map(([label, valor]) => ({ label, valor }))
       .sort((a, b) => b.valor - a.valor)
-      .slice(0, 8);
+      .slice(0, 10);
 
     const pendentes = Math.max(linhas.length - confirmados, 0);
     const porStatus = [
@@ -1069,6 +1088,14 @@
       document.getElementById("scpAlta").value = estado.scp?.scpAlta || "0";
       document.getElementById("scpInter").value = estado.scp?.scpInter || "0";
       document.getElementById("scpMin").value = estado.scp?.scpMin || "0";
+
+      const tecnicosSalvos = Array.isArray(estado.tecnicos) ? estado.tecnicos : [];
+      const totalDesejado = Math.min(Math.max(tecnicosSalvos.length, TECNICOS_INICIAIS), MAX_TECNICOS);
+      let totalAtual = document.querySelectorAll("#corpoTecnicos tr").length;
+      while (totalAtual < totalDesejado) {
+        criarLinhaTecnico(totalAtual + 1);
+        totalAtual += 1;
+      }
 
       const linhas = Array.from(document.querySelectorAll("#corpoTecnicos tr"));
       linhas.forEach((tr, idx) => {
@@ -1344,4 +1371,7 @@
   document.getElementById("btnExportarCsv").addEventListener("click", exportarCSV);
   document.getElementById("btnImprimir").addEventListener("click", () => window.print());
   document.getElementById("btnReiniciarSistema").addEventListener("click", reiniciarSistema);
+  if (btnAdicionarTecnico) {
+    btnAdicionarTecnico.addEventListener("click", adicionarTecnico);
+  }
 })();
