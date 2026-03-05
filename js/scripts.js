@@ -1,6 +1,7 @@
 (() => {
   const DEFAULT_AVATAR_URL = "data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' rx='28' fill='%231d4e80'/%3E%3Ccircle cx='128' cy='96' r='46' fill='%23c8d8e9'/%3E%3Cpath d='M52 214c10-34 41-57 76-57s66 23 76 57' fill='%23c8d8e9'/%3E%3Crect x='80' y='176' width='96' height='50' rx='14' fill='%23123b61'/%3E%3Ctext x='128' y='211' text-anchor='middle' font-family='Segoe UI, Arial, sans-serif' font-size='34' font-weight='700' fill='%23ffffff'%3ET33%3C/text%3E%3C/svg%3E";
   const STORAGE_KEY = "tasy_dimensionamento_v2";
+  const STORAGE_ESCALA_MODO = "tasy_escala_modo_compacto";
   const TECNICOS_INICIAIS = 0;
   const MAX_TECNICOS = 10;
   const setoresUTI = new Set(["UTI 1", "UTI 2"]);
@@ -60,6 +61,7 @@
   const corpoTecnicos = document.getElementById("corpoTecnicos");
   const template = document.getElementById("tplTecnico");
   const btnAdicionarTecnico = document.getElementById("btnAdicionarTecnico");
+  const btnModoEscala = document.getElementById("btnModoEscala");
   const filtroSetor = document.getElementById("filtroSetor");
   const menuItems = document.querySelectorAll(".menu-item");
   const tasyBreadcrumb = document.getElementById("tasyBreadcrumb");
@@ -394,6 +396,19 @@
   function removerLinhaTecnico(tr) {
     tr.remove();
     renumerarTecnicos();
+  }
+
+  function definirModoEscala(compacto) {
+    document.body.classList.toggle("escala-compacta", Boolean(compacto));
+    if (btnModoEscala) {
+      btnModoEscala.textContent = compacto ? "Modo: Compacto" : "Modo: Normal";
+    }
+    localStorage.setItem(STORAGE_ESCALA_MODO, compacto ? "1" : "0");
+  }
+
+  function alternarModoEscala() {
+    const ativo = document.body.classList.contains("escala-compacta");
+    definirModoEscala(!ativo);
   }
 
   let toastTimer = null;
@@ -1219,6 +1234,7 @@
   }
 
   montarTecnicos();
+  definirModoEscala(localStorage.getItem(STORAGE_ESCALA_MODO) === "1");
   restaurarEstado();
   aplicarPermissaoSetores();
   if (!localStorage.getItem(STORAGE_KEY)) {
@@ -1395,5 +1411,8 @@
   document.getElementById("btnReiniciarSistema").addEventListener("click", reiniciarSistema);
   if (btnAdicionarTecnico) {
     btnAdicionarTecnico.addEventListener("click", adicionarTecnico);
+  }
+  if (btnModoEscala) {
+    btnModoEscala.addEventListener("click", alternarModoEscala);
   }
 })();

@@ -421,6 +421,54 @@ th {
 .tabela-principal th:nth-child(9) { min-width: 130px; }
 .tabela-principal th:nth-child(10) { min-width: 130px; }
 
+body.escala-compacta #secEnfermagem .tabela-principal th,
+body.escala-compacta #secEnfermagem .tabela-principal td {
+  padding: 1px 2px;
+}
+
+body.escala-compacta #secEnfermagem .tabela-principal th {
+  font-size: 10px;
+}
+
+body.escala-compacta #secEnfermagem input,
+body.escala-compacta #secEnfermagem select,
+body.escala-compacta #secEnfermagem textarea {
+  font-size: 10px;
+  min-height: 20px;
+  padding: 1px 2px;
+}
+
+body.escala-compacta #secEnfermagem textarea {
+  min-height: 44px;
+}
+
+body.escala-compacta #secEnfermagem .campo-leitos {
+  font-size: 11px;
+  min-height: 48px;
+  line-height: 1.2;
+}
+
+body.escala-compacta #secEnfermagem .bloco-atrib,
+body.escala-compacta #secEnfermagem .bloco-assistencia {
+  max-height: 78px;
+}
+
+body.escala-compacta #secEnfermagem .bloco-atrib label,
+body.escala-compacta #secEnfermagem .bloco-assistencia label {
+  font-size: 9px;
+  line-height: 1.2;
+}
+
+body.escala-compacta #secEnfermagem .acoes-linha {
+  gap: 2px;
+}
+
+body.escala-compacta #secEnfermagem .acoes-linha button {
+  font-size: 9px;
+  min-height: 18px;
+  padding: 1px 2px;
+}
+
 input,
 select,
 textarea {

@@ -101,6 +101,33 @@
     min-width: 94px;
   }
 
+  body.escala-compacta #secEnfermagem .tabela-principal th,
+  body.escala-compacta #secEnfermagem .tabela-principal td {
+    padding: 1px;
+  }
+
+  body.escala-compacta #secEnfermagem .tabela-principal th {
+    font-size: 10px;
+  }
+
+  body.escala-compacta #secEnfermagem input,
+  body.escala-compacta #secEnfermagem select,
+  body.escala-compacta #secEnfermagem textarea {
+    font-size: 10px;
+    min-height: 20px;
+    padding: 1px 2px;
+  }
+
+  body.escala-compacta #secEnfermagem .campo-leitos {
+    font-size: 11px;
+    min-height: 46px;
+  }
+
+  body.escala-compacta #secEnfermagem .acoes-linha button {
+    min-height: 18px;
+    font-size: 9px;
+  }
+
   .login-avatar {
     width: 108px;
     height: 108px;
