@@ -252,15 +252,8 @@
   }
 
   function limitarDigitacaoLeitos(valor, largura = 3) {
-    const bruto = String(valor || "").replace(/[^\d\s\n]/g, "");
-    let saida = "";
-    for (const ch of bruto) {
-      if (/\d/.test(ch)) {
-        // Mantem apenas blocos compativeis com largura do leito (ate 4 digitos).
-      }
-      saida += ch;
-    }
-    return saida;
+    // Normaliza imediatamente para blocos de ate 4 digitos (quantidade ilimitada).
+    return formatarLeitosEmQuadroDigitacao(valor, largura);
   }
 
   function aplicarFormatoControleDiario() {
