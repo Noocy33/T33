@@ -1,5 +1,5 @@
 (function () {
-  const DEFAULT_AVATAR_URL = "images/avatar.jpg?v=20260305fixavatar1";
+  const DEFAULT_AVATAR_URL = "images/avatar.jpg?v=20260305fixavatar2";
   const form = document.getElementById("loginForm");
   const campoUsuario = document.getElementById("loginUsuario");
   const campoSenha = document.getElementById("loginSenha");
@@ -35,21 +35,7 @@
     });
   }
 
-  function montarSrcAvatar(url) {
-    const base = String(url || "").trim();
-    if (!base) {
-      return DEFAULT_AVATAR_URL;
-    }
-    if (base.startsWith("data:image/")) {
-      return base;
-    }
-    const sep = base.includes("?") ? "&" : "?";
-    return `${base}${sep}v=${Date.now()}`;
-  }
-
   function atualizarAvatarLogin() {
-    const fotoAdmin = window.TASYAuth.obterFotoAdminExibicao?.() || "";
-
     if (!loginAvatar || !loginAvatarNome) {
       return;
     }
@@ -62,7 +48,7 @@
     }
 
     if (usuario === "T33" || usuario === "TESTET33") {
-      loginAvatar.src = montarSrcAvatar(fotoAdmin);
+      loginAvatar.src = DEFAULT_AVATAR_URL;
       loginAvatarNome.textContent = usuario === "T33" ? "Administrador T33" : "Usuario TESTET33";
       loginAvatar.style.opacity = "1";
       return;

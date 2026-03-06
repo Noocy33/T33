@@ -1,4 +1,4 @@
-const CACHE_NAME = "tasy-t33-cache-v16";
+const CACHE_NAME = "tasy-t33-cache-v17";
 const ASSETS = [
   "./",
   "index.html",

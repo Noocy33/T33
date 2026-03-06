@@ -102,7 +102,7 @@
 <body class="login-page">
   <main class="login-card splash-card">
     <div class="msn-orbita msn-orbita-grande" aria-hidden="true">
-      <img id="splashAvatar" src="images/avatar.jpg?v=20260305fixavatar1" alt="" onerror="this.onerror=null;this.src='images/avatar.svg?v=20260305fixavatar1'">
+      <img id="splashAvatar" src="images/avatar.jpg?v=20260305fixavatar2" alt="" onerror="this.onerror=null;this.src='images/avatar.svg?v=20260305fixavatar2'">
     </div>
     <p class="splash-frase">EQUIPE T33</p>
   </main>
@@ -116,17 +116,7 @@
       }
       const avatar = document.getElementById("splashAvatar");
       if (avatar) {
-        const foto = window.TASYAuth?.obterFotoAdminExibicao?.();
-        if (foto) {
-          if (String(foto).startsWith("data:image/")) {
-            avatar.src = foto;
-          } else {
-            const sep = String(foto).includes("?") ? "&" : "?";
-            avatar.src = `${foto}${sep}v=${Date.now()}`;
-          }
-        } else {
-          avatar.src = "images/avatar.jpg?v=20260305fixavatar1";
-        }
+        avatar.src = `images/avatar.jpg?v=20260305fixavatar2_${Date.now()}`;
       }
       setTimeout(() => {
         window.location.replace("T33.html");
