@@ -13,6 +13,7 @@ const ASSETS = [
   "js/login.js",
   "js/register.js",
   "js/scripts.js",
+  "images/avatar.jpg",
   "images/avatar.svg"
 ];
 
