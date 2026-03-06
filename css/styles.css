@@ -558,11 +558,47 @@ textarea {
   font-size: 10px;
   font-weight: 700;
   color: #1f3f61;
+  border: 1px solid #c5d3e0;
+  border-radius: 3px;
+  padding: 1px 2px;
+}
+
+.bloco-fugulin .scp-cat-int {
+  background: #8e24aa;
+  color: #ffffff;
+  border-color: #6a1b9a;
+}
+
+.bloco-fugulin .scp-cat-semi {
+  background: #e53935;
+  color: #ffffff;
+  border-color: #b71c1c;
+}
+
+.bloco-fugulin .scp-cat-alta {
+  background: #ffeb3b;
+  color: #2d2d2d;
+  border-color: #fbc02d;
+}
+
+.bloco-fugulin .scp-cat-inter {
+  background: #1e88e5;
+  color: #ffffff;
+  border-color: #1565c0;
+}
+
+.bloco-fugulin .scp-cat-min {
+  background: #2e7d32;
+  color: #ffffff;
+  border-color: #1b5e20;
 }
 
 .bloco-fugulin input {
   min-height: 20px;
   font-size: 10px;
+  background: #ffffff;
+  color: #1f3f61;
+  border: 1px solid #8ea6be;
 }
 
 .bloco-atrib label,
