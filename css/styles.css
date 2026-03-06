@@ -545,12 +545,21 @@ textarea {
 }
 
 .bloco-fugulin {
-  min-width: 118px;
+  min-width: 128px;
   display: grid;
   gap: 3px;
 }
 
-.bloco-fugulin select,
+.bloco-fugulin label {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  align-items: center;
+  gap: 2px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #1f3f61;
+}
+
 .bloco-fugulin input {
   min-height: 20px;
   font-size: 10px;

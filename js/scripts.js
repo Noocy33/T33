@@ -249,14 +249,23 @@
   }
 
   function atualizarSomaTecnico(tr) {
-    const categoria = tr.querySelector(".campo-scp-categoria")?.value || "";
-    const pacientes = Number(tr.querySelector(".campo-scp-pacientes")?.value || 0);
     const campoSoma = tr.querySelector(".campo-scp-soma-tecnico");
     if (!campoSoma) {
       return;
     }
-    const cfg = obterConfigCategoriaSCP(categoria);
-    const soma = Math.max(pacientes, 0) * cfg.tempoSegundos;
+    const mapaCampos = [
+      { classe: ".campo-scp-int", chave: "INTENSIVO" },
+      { classe: ".campo-scp-semi", chave: "SEMI" },
+      { classe: ".campo-scp-alta", chave: "ALTA" },
+      { classe: ".campo-scp-inter", chave: "INTER" },
+      { classe: ".campo-scp-min", chave: "MIN" }
+    ];
+    let soma = 0;
+    mapaCampos.forEach((item) => {
+      const pacientes = Number(tr.querySelector(item.classe)?.value || 0);
+      const cfg = obterConfigCategoriaSCP(item.chave);
+      soma += Math.max(pacientes, 0) * cfg.tempoSegundos;
+    });
     campoSoma.value = formatarDuracaoHHMMSS(soma);
   }
 
@@ -442,14 +451,9 @@
     if (assistencia) {
       assistencia.innerHTML = criarAssistenciaHtml(assistenciaPorSetor(setor));
     }
-    const scpCategoria = tr.querySelector(".campo-scp-categoria");
-    const scpPacientes = tr.querySelector(".campo-scp-pacientes");
-    if (scpCategoria) {
-      scpCategoria.value = "";
-    }
-    if (scpPacientes) {
-      scpPacientes.value = "0";
-    }
+    tr.querySelectorAll(".campo-scp-valor").forEach((campo) => {
+      campo.value = "0";
+    });
     const somaTecnico = tr.querySelector(".campo-scp-soma-tecnico");
     if (somaTecnico) {
       somaTecnico.value = "00:00:00";
@@ -583,12 +587,11 @@
     };
     const linhas = Array.from(document.querySelectorAll("#corpoTecnicos tr"));
     linhas.forEach((tr) => {
-      const categoria = String(tr.querySelector(".campo-scp-categoria")?.value || "").trim().toUpperCase();
-      const pacientes = Number(tr.querySelector(".campo-scp-pacientes")?.value || 0);
-      if (!categoria || !Object.prototype.hasOwnProperty.call(totais, categoria)) {
-        return;
-      }
-      totais[categoria] += Math.max(pacientes, 0);
+      totais.INTENSIVO += Math.max(Number(tr.querySelector(".campo-scp-int")?.value || 0), 0);
+      totais.SEMI += Math.max(Number(tr.querySelector(".campo-scp-semi")?.value || 0), 0);
+      totais.ALTA += Math.max(Number(tr.querySelector(".campo-scp-alta")?.value || 0), 0);
+      totais.INTER += Math.max(Number(tr.querySelector(".campo-scp-inter")?.value || 0), 0);
+      totais.MIN += Math.max(Number(tr.querySelector(".campo-scp-min")?.value || 0), 0);
     });
 
     const mapa = [
@@ -1184,6 +1187,13 @@
       colaborador: tr.querySelector(".campo-colaborador")?.value || "",
       setor: tr.querySelector(".campo-setor")?.value || "",
       leitos: tr.querySelector(".campo-leitos")?.value || "",
+      scpDetalhado: {
+        intensivo: tr.querySelector(".campo-scp-int")?.value || "0",
+        semi: tr.querySelector(".campo-scp-semi")?.value || "0",
+        alta: tr.querySelector(".campo-scp-alta")?.value || "0",
+        inter: tr.querySelector(".campo-scp-inter")?.value || "0",
+        min: tr.querySelector(".campo-scp-min")?.value || "0"
+      },
       scpCategoria: tr.querySelector(".campo-scp-categoria")?.value || "",
       scpPacientes: tr.querySelector(".campo-scp-pacientes")?.value || "0",
       descanso: tr.querySelector(".campo-descanso")?.value || "1 hora",
@@ -1286,8 +1296,27 @@
         const setorAtual = tr.querySelector(".campo-setor").value;
         const largura = larguraLeitoPorSetor(setorAtual);
         tr.querySelector(".campo-leitos").value = formatarLeitosEmQuadro(src.leitos || "", largura);
-        tr.querySelector(".campo-scp-categoria").value = src.scpCategoria || "";
-        tr.querySelector(".campo-scp-pacientes").value = src.scpPacientes || "0";
+        const scpDetalhado = src.scpDetalhado || {};
+        const scpInt = tr.querySelector(".campo-scp-int");
+        const scpSemi = tr.querySelector(".campo-scp-semi");
+        const scpAlta = tr.querySelector(".campo-scp-alta");
+        const scpInter = tr.querySelector(".campo-scp-inter");
+        const scpMin = tr.querySelector(".campo-scp-min");
+        if (scpInt) scpInt.value = String(scpDetalhado.intensivo || "0");
+        if (scpSemi) scpSemi.value = String(scpDetalhado.semi || "0");
+        if (scpAlta) scpAlta.value = String(scpDetalhado.alta || "0");
+        if (scpInter) scpInter.value = String(scpDetalhado.inter || "0");
+        if (scpMin) scpMin.value = String(scpDetalhado.min || "0");
+        // Compatibilidade com dados antigos (categoria unica + pacientes).
+        if (!src.scpDetalhado && src.scpCategoria && src.scpPacientes) {
+          const cat = String(src.scpCategoria).toUpperCase();
+          const qtd = String(src.scpPacientes || "0");
+          if (cat === "INTENSIVO" && scpInt) scpInt.value = qtd;
+          if (cat === "SEMI" && scpSemi) scpSemi.value = qtd;
+          if (cat === "ALTA" && scpAlta) scpAlta.value = qtd;
+          if (cat === "INTER" && scpInter) scpInter.value = qtd;
+          if (cat === "MIN" && scpMin) scpMin.value = qtd;
+        }
         tr.querySelector(".campo-descanso").value = src.descanso || "1 hora";
         tr.querySelector(".campo-obs").value = src.obs || "";
         atualizarConfigLeitosPorSetor(tr, setorAtual);
@@ -1436,6 +1465,12 @@
   });
 
   document.addEventListener("input", (event) => {
+    if (event.target.classList.contains("campo-scp-valor")) {
+      calcularSCP();
+      salvarEstado();
+      return;
+    }
+
     if (event.target.classList.contains("campo-leitos")) {
       // Mantem digitacao totalmente livre durante o input (inclusive espaco).
       distribuirBanhos();
@@ -1445,7 +1480,7 @@
     if (
       event.target.classList.contains("campo-matricula") ||
       event.target.classList.contains("campo-colaborador") ||
-      event.target.classList.contains("campo-scp-pacientes") ||
+      event.target.classList.contains("campo-scp-valor") ||
       event.target.classList.contains("campo-obs") ||
       event.target.id === "altasHospitalar" ||
       event.target.id === "leitosDisponivel" ||
@@ -1501,7 +1536,7 @@
     if (event.target.matches(".bloco-atrib input, .bloco-assistencia input")) {
       salvarEstado();
     }
-    if (event.target.classList.contains("campo-scp-categoria")) {
+    if (event.target.classList.contains("campo-scp-valor")) {
       calcularSCP();
       salvarEstado();
     }
