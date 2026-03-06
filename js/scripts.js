@@ -234,11 +234,11 @@
   function obterConfigCategoriaSCP(categoria) {
     const chave = String(categoria || "").trim().toUpperCase();
     const unidadePorCategoria = {
-      INTENSIVO: 8,
-      SEMI: 6,
+      INTENSIVO: 2,
+      SEMI: 3,
       ALTA: 4,
-      INTER: 3,
-      MIN: 2
+      INTER: 6,
+      MIN: 8
     };
     const unidade = Number(unidadePorCategoria[chave] || 0);
     const SEGUNDOS_POR_UNIDADE = 825; // 13m45s
@@ -592,11 +592,11 @@
     });
 
     const mapa = [
-      { id: "scpInt", totalId: "scpIntTotal", somaId: "scpIntSoma", chave: "INTENSIVO", unidade: 8 },
-      { id: "scpSemi", totalId: "scpSemiTotal", somaId: "scpSemiSoma", chave: "SEMI", unidade: 6 },
+      { id: "scpInt", totalId: "scpIntTotal", somaId: "scpIntSoma", chave: "INTENSIVO", unidade: 2 },
+      { id: "scpSemi", totalId: "scpSemiTotal", somaId: "scpSemiSoma", chave: "SEMI", unidade: 3 },
       { id: "scpAlta", totalId: "scpAltaTotal", somaId: "scpAltaSoma", chave: "ALTA", unidade: 4 },
-      { id: "scpInter", totalId: "scpInterTotal", somaId: "scpInterSoma", chave: "INTER", unidade: 3 },
-      { id: "scpMin", totalId: "scpMinTotal", somaId: "scpMinSoma", chave: "MIN", unidade: 2 }
+      { id: "scpInter", totalId: "scpInterTotal", somaId: "scpInterSoma", chave: "INTER", unidade: 6 },
+      { id: "scpMin", totalId: "scpMinTotal", somaId: "scpMinSoma", chave: "MIN", unidade: 8 }
     ];
 
     atualizarSomaTodosTecnicos();
