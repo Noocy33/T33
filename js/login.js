@@ -1,5 +1,5 @@
 (function () {
-  const DEFAULT_AVATAR_URL = "images/avatar.jpg?v=20260305fixavatar2";
+  const DEFAULT_AVATAR_URL = "images/avatar.jpg?v=20260305fixavatar3";
   const form = document.getElementById("loginForm");
   const campoUsuario = document.getElementById("loginUsuario");
   const campoSenha = document.getElementById("loginSenha");
