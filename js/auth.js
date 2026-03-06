@@ -1,5 +1,5 @@
 (function () {
-  const DEFAULT_AVATAR_URL = "images/avatar.jpg?v=20260306avatar";
+  const DEFAULT_AVATAR_URL = "images/avatar.jpg?v=20260305fixavatar1";
   const SESSION_KEY = "tasy_auth_session_v1";
   const USERS_KEY = "tasy_auth_users_v1";
   const PENDING_KEY = "tasy_auth_pending_v1";
